@@ -1,9 +1,9 @@
 # 48h Money In — Skill
 
-[![License](https://img.shields.io/github/license/seyhunak/48h-money-in.svg)](./LICENSE)
-[![Issues](https://img.shields.io/github/issues/seyhunak/48h-money-in.svg)](https://github.com/seyhunak/48h-money-in/issues)
-[![Forks](https://img.shields.io/github/forks/seyhunak/48h-money-in.svg)](https://github.com/seyhunak/48h-money-in/forks)
-[![Stars](https://img.shields.io/github/stars/seyhunak/48h-money-in.svg)](https://github.com/seyhunak/48h-money-in/stargazers)
+[![License](https://img.shields.io/github/license/seyhunak/48h-money-in.svg?style=flat)](./LICENSE)
+[![Issues](https://img.shields.io/github/issues/seyhunak/48h-money-in.svg?style=flat)](https://github.com/seyhunak/48h-money-in/issues)
+[![Forks](https://img.shields.io/github/forks/seyhunak/48h-money-in.svg?style=flat)](https://github.com/seyhunak/48h-money-in/forks)
+[![Stars](https://img.shields.io/github/stars/seyhunak/48h-money-in.svg?style=flat)](https://github.com/seyhunak/48h-money-in/stargazers)
 
 48-hour sprint to land a first paying customer — `Problem → Buyer → Validation → Solution → Demo → Offer → Payment`.
 
