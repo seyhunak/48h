@@ -1,6 +1,6 @@
 ---
 name: 48h-money-in
-description: 48-hour sprint to land a first paying customer. Use when the user invokes "48h Money In: [DOMAIN] | [LOCATION] | [PRICE RANGE]" or provides a URL to capture domain/target/pricing opportunities, or asks to find/validate/sell a solution to a real expensive problem and close a paying customer within 48 hours. Do not use for long product development or general brainstorming.
+description: 48-hour sprint to land a first paying customer. Always starts by asking domain(area), location/region, pricing target, and platform (Web SaaS vs mobile-only iOS). Supports Web (Next.js+Convex+Stripe) and mobile-only iOS ideas (SwiftUI+Firebase+Apple IAP via RevenueCat). Use when the user invokes "48h Money In: [DOMAIN] | [LOCATION] | [PRICE RANGE]" or provides a URL to capture domain/target/pricing opportunities, or asks to find/validate/sell a solution to a real expensive problem and close a paying customer within 48 hours. Do not use for long product development or general brainstorming.
 ---
 
 # Skill: 48h Money In
@@ -35,6 +35,42 @@ Your objective is:
 > **Problem → Buyer → Validation → Solution → Demo → Offer → Payment**
 
 The clock starts immediately.
+---
+
+# 0. INTAKE — ASK DOMAIN, LOCATION, PRICING FIRST (MANDATORY)
+
+Do NOT start research until you have these three inputs confirmed.
+
+If the user invoked with `48h Money In: [DOMAIN] | [LOCATION] | [PRICE RANGE] | [Web|iOS]` and domain/location/price are clear (platform defaults to Web if unstated), echo them back in one line and start the clock.
+
+If any are missing, vague, or only inferable — ASK before researching. Use the `question` tool (or plain questions if unavailable) with these exact questions:
+
+1. **Domain (area)?** — What industry / problem area to hunt in?
+   - Example answers: `logistics for SMEs`, `dental clinics`, `e-commerce fulfillment`, `construction compliance`
+   - Accept broad + narrow. If broad, propose a narrow slice after answer.
+
+2. **Location / region?** — Where are the customers?
+   - Example answers: `Berlin, DE`, `DACH`, `UAE`, `US remote`, `global / English-speaking`
+   - Needed for regulations, pricing comps, language, outreach channels, time zones.
+
+3. **Pricing target?** — What should one customer pay?
+   - Example answers: `$500 one-time`, `$1k setup + $200/mo`, `$3k–$5k pilot`, `€500–€2k`, `TBD — propose 3 anchors`
+   - If user says TBD / don't know, propose 3 anchors based on domain + location and let them pick one.
+   - For mobile-only: answer as IAP subscription target, e.g. `$4.99–$9.99/mo or $39–$79/yr`.
+
+4. **Platform?** — Web SaaS or mobile-only iOS?
+   - Options: `Web SaaS (Next.js + Convex + Stripe)` (default) / `Mobile-only iOS (SwiftUI + Firebase + RevenueCat)`
+   - Ask this always — do not infer from domain alone. If user says `mobile`, `iOS`, `iPhone`, `App Store`, route to Track B (§5 Track B).
+   - If invocation already states platform (e.g. `mobile-only`, `iOS`, `SwiftUI`), echo it and skip asking.
+
+Rules:
+- Ask all missing inputs in ONE batch, not one-by-one.
+- Never silently infer location or pricing — a wrong guess wastes the 48h.
+- Company type/size is optional bonus (infer from domain unless B2B enterprise — then confirm buyer).
+- Platform routing: `Web` → §5 Track A, `Mobile-only iOS` → §5 Track B. State the chosen track explicitly.
+- Once answered, restate as: `48h Money In: [DOMAIN] | [LOCATION] | [PRICE] | [Web|iOS] — clock started` and proceed to §1.
+- URL mode (§14): still run URL capture first, then fill gaps by asking only what's still missing.
+
 ---
 
 # 1. FIND THE MONEY
@@ -207,11 +243,19 @@ Prioritize:
 
 1. Warm contacts
 2. Existing network
-3. Email
-4. X
+3. Email (manual send by the user)
+4. X (manual post/DM by the user)
 5. Industry communities
 6. Direct company contact
 7. Other relevant channels
+
+### Outreach execution rules — NO automation (mandatory)
+
+- Do **NOT** use Composio, Gmail tools, mailbox APIs, auto-senders, schedulers, or any email-sending integration — no `COMPOSIO_*`, no `GMAIL_*`, no draft creation, no sends.
+- Do **NOT** touch the user's mailbox, contacts, or social accounts in any way.
+- Provide ready-to-paste outreach copy (subject + body + personalization slots like `[Name]`, `[Company]`) for the user to send manually. Max 3 messages per batch unless the user explicitly raises the cap.
+- Same for X/DMs/communities: ready-to-paste text only, never auto-post.
+- Log outreach as "drafted for manual send", never as "sent", and always report the exact copy in chat + Obsidian report.
 
 The goal is not engagement.
 
@@ -257,12 +301,12 @@ over:
 
 Build only what is required to demonstrate the promised outcome.
 
-### Recommended Stack — Generate via spec-kit (GitHub)
+### Track A — Web SaaS (default) — Generate via spec-kit (GitHub)
 
 When you do build, **suggest generating the app with [github/spec-kit](https://github.com/github/spec-kit)** — spec-driven, white-label ready, 1-day capable:
 
 - **Spec first:** `/spec` writes the 48h fix-pack spec (problem → buyer → scope → success criteria) before code — matches §3 SELECT ONE.
-- **Frontend:** **Next.js 15 App Router + Tailwind + shadcn/ui + full landing page** — marketing landing (hero with **single primary CTA** `Upload 10 invoices — see cleared →` only, no `$3k Fix-Pack` hero button, problem → before/after, pricing 100 credits — $1,000 ($10/credit), social proof, FAQ) + app — fast to brand (logo/colors/subdomain, single `ShieldCheck` logo + App name, no extra icons), responsive, Vercel-deployable in 1 click. **Use [Hallmark](https://github.com/Nutlope/hallmark)** — install `npx skills add nutlope/hallmark`, then run `hallmark audit` and design by deciding theme (audit → pick theme → apply to landing + app — e.g. Tally/Hum). **Codebase must follow Clean Architecture** — `src/domain` (entities/use-cases, no framework), `src/application` (services, ports), `src/infrastructure` (Convex/Clerk/Stripe/PDF adapters), `src/presentation` (Next.js app routes + shadcn components) → dependency rule points inward, Hallmark tokens live only in presentation. **Use proper logo from icon library** — `lucide-react` `ShieldCheck` single + wordmark, token-colored. **Top menu (N5 pill → N1b for Hum) must show** `logo - App name - Buttons (App, Admin if admin) - Logged user + balance (if logged)` — Clerk `<UserButton>` / `useUser()` avatar + email + credits badge + **Buy Credits → Stripe Checkout** → redirect back to `/app` (success_url=`/app?credits=added`), keep `stripe listen` open; also show **Logout/Login**. **Admin link must NOT appear in public** — only visible to admin user. **Footer must be generic** — `About`, `Terms`, `Privacy`, `Contact`, `Sitemap`, `Robots` (all 200, not 404), no `White-label experiment — 1 customer · 1 day` text.
+- **Frontend:** **Next.js 15 App Router + Tailwind + shadcn/ui + full landing page** — marketing landing (hero with **single primary CTA** `Upload 10 invoices — see cleared →` only, no `$3k Fix-Pack` hero button, problem → before/after, pricing 100 credits — $1,000 ($10/credit), social proof, FAQ) + app — fast to brand (logo/colors/subdomain, single `ShieldCheck` logo + App name, no extra icons), responsive, Vercel-deployable in 1 click. **Use [Hallmark](https://www.usehallmark.com) ([github](https://github.com/nutlope/hallmark))** — install `npx skills add nutlope/hallmark` (auto-detected: Claude Code `~/.claude/skills/hallmark/`, Codex `~/.codex/skills/hallmark/`, Cursor `.cursor/rules/hallmark.mdc`; then just ask for UI — hallmark attaches via `hallmark.observe()`). 48h workflow: `hallmark audit` current page (ranked punch list, **no edits**) → pick theme (default **Tally** for SaaS fix-pack, **Hum** for editorial; 20 themes, press T to preview) → `hallmark build` with theme (macrostructure → theme → enrichment; stamped, slop-tested; refuses repeating last 3 macrostructures) → apply tokens to landing + `/app`. Extra verbs: `hallmark study <URL|screenshot>` → DNA card (`lock the DNA` → portable `design.md`, never copies pixels); `hallmark redesign` keeps content/brand, changes bones. Obey 8 foundations (display+body font pair, never Inter-everywhere; OKLCH 1 anchor hue, accent <5%; spacing multiples of 4; asymmetric biased layout; exponential ease-out + reduced-motion; distinct voice; display/body/label hierarchy) and avoid the 5 slop tells audit flags (purple-gradient hero → solid + single accent; Inter-as-display; centred-everything; icon-tile feature cards; generic AI nav). **Codebase must follow Clean Architecture** — `src/domain` (entities/use-cases, no framework), `src/application` (services, ports), `src/infrastructure` (Convex/Clerk/Stripe/PDF adapters), `src/presentation` (Next.js app routes + shadcn components) → dependency rule points inward, Hallmark tokens live only in presentation. **Use proper logo from icon library** — `lucide-react` `ShieldCheck` single + wordmark, token-colored. **Top menu (N5 pill → N1b for Hum) must show** `logo - App name - Buttons (App, Admin if admin) - Logged user + balance (if logged)` — Clerk `<UserButton>` / `useUser()` avatar + email + credits badge + **Buy Credits → Stripe Checkout** → redirect back to `/app` (success_url=`/app?credits=added`), keep `stripe listen` open; also show **Logout/Login**. **Admin link must NOT appear in public** — only visible to admin user. **Footer must be generic** — `About`, `Terms`, `Privacy`, `Contact`, `Sitemap`, `Robots` (all 200, not 404), no `White-label experiment — 1 customer · 1 day` text.
 - **Auth:** **Clerk** — hosted auth (sign-in/up, orgs), webhook → Convex `users`, **admin user for me** (seeded via `ADMIN_EMAIL` env, role=admin). No custom auth.
 - **Backend:** **Convex** — real tables (no dummy data), schema in `convex/schema.ts` (tenants, users, invoices, submissions, credits, vault), file storage for XML/PDF, realtime queries. **Just put API keys in `.env.local` and it is ready — max 1 minute setup** (`NEXT_PUBLIC_CONVEX_URL`, `CLERK_*`, `STRIPE_*`). **Push live:** after seed, run `npx convex codegen` + `npx convex dev --once --typecheck disable` (dev at `dev:majestic-wren-98`, prod via `npx convex deploy --yes`) — ensure DB, schema, indexes, and functions (`credits:getBalance/getOrCreate/consume/addCredits`) are built and deployed; verify with `npx convex run credits:getOrCreate '{"clerkId":"test123"}'`. No seed stubs.
 - **SEO (when creating app):** **Always include SEO** — Next.js Metadata API (title/description/canonical/OG/Twitter), `sitemap.ts`, `robots.ts`, `llms.txt`, JSON-LD (Organization + Product + FAQ), OG image (1200x630), `next-sitemap` or `next-seo`, and keyword-ready blog stub (`/blog`). Hallmark theme must not break SEO (semantic headings, alt text, meta).
@@ -280,9 +324,34 @@ When you do build, **suggest generating the app with [github/spec-kit](https://g
   5. **Stripe price:** `STRIPE_PRICE_CREDITS` may be `price_...` or `100` — `src/app/api/checkout/route.ts` must branch `isPriceId ? {price} : {price_data:{currency:"usd", product:"100 credits @ $10/credit", unit_amount:100000}}` ($1,000 for 100 → $10/credit); `success_url` must be `new URL(req.url).origin + "/app?credits=added"` (not `NEXT_PUBLIC_SITE_URL` prod on localhost). Webhook `src/app/api/webhooks/stripe/route.ts` must skip verification if `STRIPE_WEBHOOK_SECRET` is `...` placeholder, otherwise `whsec_...` from `stripe listen --forward-to localhost:3000/api/webhooks/stripe` must be kept open, and `/app?credits=added` must refetch Convex `getBalance` via realtime (no manual refresh).
   6. **Hero/Footer:** Hero has **single CTA** (`Upload 10 invoices — see cleared →` only, no `$3k Fix-Pack` button) and footer is **generic** (`About`, `Terms`, `Privacy`, `Contact`, `Sitemap`, `Robots` all 200) — no `White-label experiment — 1 customer · 1 day` text; create `src/app/about|terms|privacy|contact/page.tsx` + `sitemap.ts` includes them, otherwise 404.
 
-> Prompt hint: `spec-kit: Next.js 15 App Router + Tailwind + shadcn/ui + Hallmark (hallmark audit → theme, Tally) + full landing + Clean Architecture (domain/application/infrastructure/presentation) + Clerk (admin user, /app Clerk-protected with login + credits check, top menu logo - App name - Buttons - Logged user + balance) + Convex (real tables, no dummy, 1m setup, prod-like, push live via convex dev --once + deploy) + SEO (metadata/sitemap/robots/JSON-LD/OG/llms.txt) + Stripe (100 credits — $1,000, $10/credit, free 3 on signup, top-menu Buy Credits → Stripe → /app?credits=added, keep stripe listen) + PDF/CSV + /admin + proper logo (lucide ShieldCheck) + seed script (asks for CONVEX/CLERK/STRIPE keys → writes .env.local + prod → codegen + dev --once + build → reports ready, 100 credits $1k) — working & tested E2E prod-like, real implementation (100 credits $10/credit, /app real [DOMAIN] workflow from 0-day, no simulation), preview via Cloudflare Tunnel then deploy to Vercel.`
+> Prompt hint: `spec-kit: Next.js 15 App Router + Tailwind + shadcn/ui + Hallmark (audit → Tally/Hum theme → build; foundations: font-pair, OKLCH 1-hue, asymmetric, no slop) + full landing + Clean Architecture (domain/application/infrastructure/presentation) + Clerk (admin user, /app Clerk-protected with login + credits check, top menu logo - App name - Buttons - Logged user + balance) + Convex (real tables, no dummy, 1m setup, prod-like, push live via convex dev --once + deploy) + SEO (metadata/sitemap/robots/JSON-LD/OG/llms.txt) + Stripe (100 credits — $1,000, $10/credit, free 3 on signup, top-menu Buy Credits → Stripe → /app?credits=added, keep stripe listen) + PDF/CSV + /admin + proper logo (lucide ShieldCheck) + seed script (asks for CONVEX/CLERK/STRIPE keys → writes .env.local + prod → codegen + dev --once + build → reports ready, 100 credits $1k) — working & tested E2E prod-like, real implementation (100 credits $10/credit, /app real [DOMAIN] workflow from 0-day, no simulation), preview via Cloudflare Tunnel then deploy to Vercel.`
 
-This keeps §5 narrow (one fix-pack schema, one customer tenant) while leaving monetization + audit trails production-ready.
+This keeps §5 Track A narrow (one fix-pack schema, one customer tenant) while leaving monetization + audit trails production-ready.
+
+### Track B — Mobile-only iOS (SwiftUI + Firebase + RevenueCat)
+
+Use when §0 Platform = `Mobile-only iOS`, or the idea only makes sense as an iPhone app (camera, push, widgets, HealthKit, offline-first, App Store distribution). Do NOT force the Web SaaS stack onto a mobile-only idea.
+
+When you do build, **suggest generating the app spec-first** (same `/spec` discipline as Track A: problem → buyer → scope → success criteria → paywall), then build native:
+
+- **Spec first:** `/spec` writes the 48h mobile fix-pack spec (problem → user → single core loop → paywall → success metric) before code — matches §3 SELECT ONE. Scope to ONE core loop + paywall, nothing else.
+- **Frontend:** **SwiftUI (iOS 17+, Swift 5.9+, Xcode 15+)** — single app target, `TabView` max 3 tabs (Core loop + History/Vault + Settings), native NavigationStack, SF Symbols only (no custom icon sprawl), Dynamic Type + VoiceOver + reduced-motion support, light/dark ready. No UIKit unless a wrapped component forces it.
+- **Architecture:** Clean MVVM — `Domain` (entities/use-cases, no Firebase import), `Data` (Firebase repositories), `Presentation` (SwiftUI Views + ViewModels, `@MainActor`), `Services` (RevenueCat, push, analytics protocols). Dependency rule points inward. No business logic in Views.
+- **Auth + Backend:** **Firebase** — Firebase Auth (Sign in with Apple mandatory if any third-party sign-in; anonymous → upgrade path allowed for 48h demo), Cloud Firestore (real collections: `users`, `workspaces`, `items/submissions`, `entitlements`, `events` — no dummy data), Firebase Storage (images/PDFs), Cloud Functions (Swift/TS, 2nd gen) for webhooks + server-side validation, FCM push, Crashlytics + Analytics from day 0. **Just put `GoogleService-Info.plist` + `.xcconfig` keys and it is ready — max 5 minute setup.** Security Rules locked-down (owner-only read/write, `request.auth != null`), Firestore indexes committed (`firestore.indexes.json`), verified with emulator (`firebase emulators:start`) before prod push.
+- **Billing (non-negotiable):** **Apple In-App Purchase, subscription managed with RevenueCat** — NO Stripe, NO custom billing, NO web checkout bypass (App Store rule). Setup: 1 monthly + 1 annual product in App Store Connect (e.g. `pro_monthly $7.99/mo`, `pro_yearly $59.99/yr` — adjust to §0 pricing target), mirrored in RevenueCat (`pro` entitlement), `Purchases.configure(apiKey)` + `login(appUserID)` on auth, paywall triggered after 3 free uses (mirror of Track A free-3 pattern), restore-purchase in Settings, sandbox tested with StoreKit Configuration file + RevenueCat sandbox. Webhook: RevenueCat → Cloud Function → Firestore `entitlements` (never trust client-side `isPro` alone). Gating: no entitlement → paywall sheet, with entitlement → full core loop.
+- **Seed script (after generation):** Create `scripts/setup-ios.sh` (or `scripts/setup.rb`) that asks for `REVENUECAT_IOS_API_KEY`, `FIREBASE_PROJECT_ID`, `APPLE_TEAM_ID`, `BUNDLE_ID`, product IDs (`PRO_MONTHLY`, `PRO_YEARLY`), then writes `.xcconfig` + validates `GoogleService-Info.plist` bundle match + runs `xcodebuild -resolvePackageDependencies` + `firebase use --add` check, then reports `✓ ready — run → sign in (Apple) → 3 free uses → paywall (RevenueCat sandbox) → core loop → history/share` confirmation. On subsequent runs it only validates, never re-asks.
+- **Preview + distribution (48h-safe):** NO App Store review on the critical path — demo via local build + Screen Recording, then **TestFlight internal (1–5 testers, available in minutes) → TestFlight external (up to 10k, no full review for first external build review ~ hours)**. Customer invited on day 0 can use the app immediately via TestFlight, no review stub. Archive with `xcodebuild archive` + upload via Transporter/`xcrun altool`; version bump `CFBundleShortVersionString` per upload.
+- **Ready to use (non-negotiable):** **Working & tested E2E before handoff — prod-like, no dummy checks, real implementation from 0-day.** After generation, `put keys in .xcconfig → run on simulator/device →` announce and users can **sign in (Apple) → 3 free uses → paywall (RevenueCat) → subscribe (sandbox) → core loop → history/share/export** with no extra dev. **No `isPro = true` debug bypass in release path, no `simulatePurchase` stub in prod path.** Require `xcodebuild test` (real Auth sign-in, real RevenueCat sandbox purchase → Firestore `entitlements/pro=true` → paywall unlocks, real export/share) passing.
+- **Pre-flight checklist (before `xcodebuild run`):**
+  1. **Bundle match:** `BUNDLE_ID` in Xcode == App Store Connect == `GoogleService-Info.plist` `BUNDLE_ID` == RevenueCat app config; otherwise Auth/push/IAP all fail silently.
+  2. **Sign in with Apple:** capability ON + App ID configured; Firebase Auth Apple provider enabled with Services ID + key.
+  3. **RevenueCat products:** `pro_monthly`/`pro_yearly` exist in App Store Connect (Ready to Submit minimum) AND linked to `pro` entitlement in RevenueCat; StoreKit config file includes both for local testing.
+  4. **Firestore rules:** `firebase deploy --only firestore:rules` pushed; emulator test passes for owner-only + entitlement-gated reads.
+  5. **Paywall copy:** price + trial/terms + `Restore Purchases` + Privacy/Terms links (App Store rejection prevention); no `Subscribe` button that does nothing.
+
+> Prompt hint: `mobile fix-pack iOS: SwiftUI (iOS 17+, 3-tab max, SF Symbols, Dynamic Type) + Clean MVVM (Domain/Data/Presentation/Services) + Firebase (Auth Apple-first, Firestore real collections, Storage, Functions 2nd gen, FCM, Crashlytics) + RevenueCat (pro entitlement, pro_monthly + pro_yearly, 3 free uses → paywall, sandbox StoreKit config, webhook → Firestore entitlements) + scripts/setup-ios.sh (asks REVENUECAT/FIREBASE/APPLE keys → .xcconfig → resolve deps → reports ready) — working & tested E2E prod-like, real core loop from 0-day, no simulation, distribute via TestFlight internal→external (no App Store review on critical path).`
+
+Track selection rule: §0 Platform decides. Web → Track A only. iOS mobile-only → Track B only. Never mix Stripe into iOS or RevenueCat into Web. Landing page for Track B = App Store listing assets (subtitle, screenshots plan, paywall copy) + optional one-page web teaser, not a full Next.js site.
 
 ---
 
@@ -610,6 +679,10 @@ If nobody cares, stop building.
 
 Return to the market.
 
+### Rule 11 — No Composio / mailbox / social automation
+
+Never use Composio, Gmail, mailbox APIs, or social-posting tools in this sprint — no sends, no drafts, no mailbox reads for outreach. Outreach is manual copy the user sends; the skill only drafts text and logs it.
+
 ---
 
 # 12. OUTPUT FORMAT
@@ -770,18 +843,18 @@ If the URL is blocked/paywalled, use fallback: text extraction via cache / `tavi
 
 When invoked with:
 
-`48h Money In: [DOMAIN] | [LOCATION] | [PRICE RANGE]`
+`48h Money In: [DOMAIN] | [LOCATION] | [PRICE RANGE] | [Web|iOS - optional, defaults to Web]`
 
 **or**
 
 `48h Money In: [URL]`  *(URL Opportunity Capture mode — see §14)*
 
-immediately begin the sprint.
+**or**
 
-Do not ask unnecessary questions.
+`48h Money In mobile-only / iOS: ...` *(shorthand for Track B — SwiftUI + Firebase + RevenueCat)*
 
-Infer reasonable assumptions where possible.
+immediately run §0 INTAKE first.
 
-If critical information is genuinely missing, ask only for the minimum required information.
+Do not skip the four questions (domain, location, pricing, platform). Echo provided values, ask for missing ones, then start.
 
-Start by finding **real problems being experienced today**, not by brainstorming products. When started from a URL, first run §14 capture, then §1 FIND THE MONEY.
+Start by finding **real problems being experienced today**, not by brainstorming products. When started from a URL, first run §14 capture, then §0 INTAKE gap-fill, then §1 FIND THE MONEY.
