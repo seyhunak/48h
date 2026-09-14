@@ -303,7 +303,7 @@ Build only what is required to demonstrate the promised outcome.
 
 ### Track A — Web SaaS (default) — Generate via spec-kit (GitHub)
 
-When you do build, **suggest generating the app with [github/spec-kit](https://github.com/github/spec-kit)** — spec-driven, white-label ready, 1-day capable:
+When you do build, **suggest generating the app with [github/spec-kit](https://github.com/github/spec-kit)** — spec-driven, white-label ready, 1-day capable. After building, run §15 SHIP TO GITHUB to seed, set up .envs, and push to a GitHub repo (created if needed).
 
 - **Spec first:** `/spec` writes the 48h fix-pack spec (problem → buyer → scope → success criteria) before code — matches §3 SELECT ONE.
 - **Frontend:** **Next.js 15 App Router + Tailwind + shadcn/ui + full landing page** — marketing landing (hero with **single primary CTA** `Upload 10 invoices — see cleared →` only, no `$3k Fix-Pack` hero button, problem → before/after, pricing 100 credits — $1,000 ($10/credit), social proof, FAQ) + app — fast to brand (logo/colors/subdomain, single `ShieldCheck` logo + App name, no extra icons), responsive, Vercel-deployable in 1 click. **Use [Hallmark](https://www.usehallmark.com) ([github](https://github.com/nutlope/hallmark))** — install `npx skills add nutlope/hallmark` (auto-detected: Claude Code `~/.claude/skills/hallmark/`, Codex `~/.codex/skills/hallmark/`, Cursor `.cursor/rules/hallmark.mdc`; then just ask for UI — hallmark attaches via `hallmark.observe()`). 48h workflow: `hallmark audit` current page (ranked punch list, **no edits**) → pick theme (default **Tally** for SaaS fix-pack, **Hum** for editorial; 20 themes, press T to preview) → `hallmark build` with theme (macrostructure → theme → enrichment; stamped, slop-tested; refuses repeating last 3 macrostructures) → apply tokens to landing + `/app`. Extra verbs: `hallmark study <URL|screenshot>` → DNA card (`lock the DNA` → portable `design.md`, never copies pixels); `hallmark redesign` keeps content/brand, changes bones. Obey 8 foundations (display+body font pair, never Inter-everywhere; OKLCH 1 anchor hue, accent <5%; spacing multiples of 4; asymmetric biased layout; exponential ease-out + reduced-motion; distinct voice; display/body/label hierarchy) and avoid the 5 slop tells audit flags (purple-gradient hero → solid + single accent; Inter-as-display; centred-everything; icon-tile feature cards; generic AI nav). **Codebase must follow Clean Architecture** — `src/domain` (entities/use-cases, no framework), `src/application` (services, ports), `src/infrastructure` (Convex/Clerk/Stripe/PDF adapters), `src/presentation` (Next.js app routes + shadcn components) → dependency rule points inward, Hallmark tokens live only in presentation. **Use proper logo from icon library** — `lucide-react` `ShieldCheck` single + wordmark, token-colored. **Top menu (N5 pill → N1b for Hum) must show** `logo - App name - Buttons (App, Admin if admin) - Logged user + balance (if logged)` — Clerk `<UserButton>` / `useUser()` avatar + email + credits badge + **Buy Credits → Stripe Checkout** → redirect back to `/app` (success_url=`/app?credits=added`), keep `stripe listen` open; also show **Logout/Login**. **Admin link must NOT appear in public** — only visible to admin user. **Footer must be generic** — `About`, `Terms`, `Privacy`, `Contact`, `Sitemap`, `Robots` (all 200, not 404), no `White-label experiment — 1 customer · 1 day` text.
@@ -313,7 +313,7 @@ When you do build, **suggest generating the app with [github/spec-kit](https://g
 - **Billing:** **Stripe — 1 fixed package, credit-based usage** — **100 credits — $1,000 ($10/credit)**, credits decrement per use (1 credit per invoice), **free 3 on signup**, customer portal + webhook (`stripe listen --forward-to localhost:3000/api/webhooks/stripe` kept open) → Convex `credits`/`subscriptions`. **Buy Credits in top menu goes to Stripe Checkout (100 credits, $10/credit) and on success redirects back to `/app` — webhook must update Convex DB (`credits` +100) and UI must reflect new balance immediately (no manual refresh).** No tier sprawl. **Pilot — $1,000, Enterprise — $1,000 + $2,000/mo**.
 - **Docs:** **PDF + CSV generation** — server-side PDF (report, vault export) + CSV exports (queue, vault) — tested with real domain field names (replace with your [DOMAIN] fields).
 - **Ops:** **Admin panel** — `/admin` (Clerk protected, `role=admin` from Convex) — manage customers, view submissions, trigger re-runs, see Stripe + credits logs, toggle per-tenant branding. Admin is your `ADMIN_EMAIL`.
-- **Ready to use (non-negotiable):** **Working & tested E2E before handoff — prod-like, no dummy checks, real implementation from 0-day.** After generation, `put keys in .env.local → max 1m setup → npm run dev →` announce and users can **register/login (Clerk) → buy credits (100 credits — $1,000, $10/credit, free 3 on signup) → start using (1 credit per invoice) → vault/PDF/CSV** with no extra dev — **customer invited on day 0 can use the app immediately, no simulation stub.** **`/app` must be Clerk-protected** (`src/proxy.ts` clerkMiddleware + `createRouteMatcher(['/app(.*)','/admin(.*)'])` → `auth.protect()`) **and must do login check + credits check + UI works as designed** — unauthed redirects to `/sign-in`, no credits shows “buy 100”, with credits shows **real workbench (upload → validation → real [DOMAIN] workflow via API → vault)** fully interactive, Hallmark-themed, responsive at 320/375/414/768. **No simulation — `/app` is the real implementation of the solution for your [DOMAIN] (not stub), customer can invite and use from 0-day.** **Stripe sandbox buy must update DB and UI: `checkout.session.completed` → Convex `credits` +100 via webhook, and `/app?credits=added` must refetch and show new balance without manual refresh.** **If seed ran before and `.env.local` is already valid, `npm run dev` just validates (checks Convex/Clerk/Stripe connectivity, no re-prompt).** Require `npm run build` + `npm run test:e2e` (real Clerk sign-up, real Stripe test checkout → webhook → Convex +100 → UI badge updates, real PDF download, login/credits UI assertions, real clearance call) passing — **no `if (!key) use dummy` branches, no `simulateClearance` stub in prod path.**
+- **Ready to use (non-negotiable):** **Working & tested E2E before handoff — prod-like, no dummy checks, real implementation from 0-day.** After generation, `put keys in .env.local → max 1m setup → npm run dev →` announce and users can **register/login (Clerk) → buy credits (100 credits — $1,000, $10/credit, free 3 on signup) → start using (1 credit per invoice) → vault/PDF/CSV** with no extra dev — **customer invited on day 0 can use the app immediately, no simulation stub.** **`/app` must be Clerk-protected** (`src/proxy.ts` clerkMiddleware + `createRouteMatcher(['/app(.*)','/admin(.*)'])` → `auth.protect()`) **and must do login check + credits check + UI works as designed** — unauthed redirects to `/sign-in`, no credits shows “buy 100”, with credits shows **real workbench (upload → validation → real [DOMAIN] workflow via API → vault)** fully interactive, Hallmark-themed, responsive at 320/375/414/768. **No simulation — `/app` is the real implementation of the solution for your [DOMAIN] (not stub), customer can invite and use from 0-day.** **Stripe sandbox buy must update DB and UI: `checkout.session.completed` → Convex `credits` +100 via webhook, and `/app?credits=added` must refetch and show new balance without manual refresh.** **If seed ran before and `.env.local` is already valid, `npm run dev` just validates (checks Convex/Clerk/Stripe connectivity, no re-prompt).** Require `npm run build` + `npm run test:e2e` (real Clerk sign-up, real Stripe test checkout → webhook → Convex +100 → UI badge updates, real PDF download, login/credits UI assertions, real clearance call) passing — **no `if (!key) use dummy` branches, no `simulateClearance` stub in prod path.** Then run §15 SHIP TO GITHUB to create/push the repo and deploy to Vercel.
 - **Seed script (after generation):** **Create `scripts/seed-env.sh` (or `scripts/setup.ts`) that asks you for API keys** — `NEXT_PUBLIC_CONVEX_URL`, `CONVEX_DEPLOYMENT`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, `CLERK_WEBHOOK_SECRET`, `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_CREDITS`, `NEXT_PUBLIC_SITE_URL`, `ADMIN_EMAIL` — **you paste them, it writes `.env.local` and `.env.production` (or Vercel env), runs `npx convex codegen` + `npx convex dev --once --typecheck disable` (or `npx convex deploy --yes` for prod) + `npm run build` check, verifies `npx convex run credits:getOrCreate` (free 3), then reports `✓ ready — register/login → buy credits (100 credits $1k, $10/credit, free 3) → start using` confirmation. On subsequent `npm run dev`, it only validates existing `.env.local` instead of re-asking.**
 - **Preview:** **Cloudflare Tunnel (free)** — creates a secure, encrypted tunnel from your local machine to Cloudflare’s edge. Install `cloudflared` (`brew install cloudflared` / `npm i -g cloudflared`), then `cloudflared tunnel --url http://localhost:3000` while `npm run dev` is running to share a public `https://*.trycloudflare.com` link instantly (no deploy) for customer demo before Vercel.
 - **Pre-flight checklist (before `npm run dev` — prevents the 15 fixes above):**
@@ -341,7 +341,7 @@ When you do build, **suggest generating the app spec-first** (same `/spec` disci
 - **Billing (non-negotiable):** **Apple In-App Purchase, subscription managed with RevenueCat** — NO Stripe, NO custom billing, NO web checkout bypass (App Store rule). Setup: 1 monthly + 1 annual product in App Store Connect (e.g. `pro_monthly $7.99/mo`, `pro_yearly $59.99/yr` — adjust to §0 pricing target), mirrored in RevenueCat (`pro` entitlement), `Purchases.configure(apiKey)` + `login(appUserID)` on auth, paywall triggered after 3 free uses (mirror of Track A free-3 pattern), restore-purchase in Settings, sandbox tested with StoreKit Configuration file + RevenueCat sandbox. Webhook: RevenueCat → Cloud Function → Firestore `entitlements` (never trust client-side `isPro` alone). Gating: no entitlement → paywall sheet, with entitlement → full core loop.
 - **Seed script (after generation):** Create `scripts/setup-ios.sh` (or `scripts/setup.rb`) that asks for `REVENUECAT_IOS_API_KEY`, `FIREBASE_PROJECT_ID`, `APPLE_TEAM_ID`, `BUNDLE_ID`, product IDs (`PRO_MONTHLY`, `PRO_YEARLY`), then writes `.xcconfig` + validates `GoogleService-Info.plist` bundle match + runs `xcodebuild -resolvePackageDependencies` + `firebase use --add` check, then reports `✓ ready — run → sign in (Apple) → 3 free uses → paywall (RevenueCat sandbox) → core loop → history/share` confirmation. On subsequent runs it only validates, never re-asks.
 - **Preview + distribution (48h-safe):** NO App Store review on the critical path — demo via local build + Screen Recording, then **TestFlight internal (1–5 testers, available in minutes) → TestFlight external (up to 10k, no full review for first external build review ~ hours)**. Customer invited on day 0 can use the app immediately via TestFlight, no review stub. Archive with `xcodebuild archive` + upload via Transporter/`xcrun altool`; version bump `CFBundleShortVersionString` per upload.
-- **Ready to use (non-negotiable):** **Working & tested E2E before handoff — prod-like, no dummy checks, real implementation from 0-day.** After generation, `put keys in .xcconfig → run on simulator/device →` announce and users can **sign in (Apple) → 3 free uses → paywall (RevenueCat) → subscribe (sandbox) → core loop → history/share/export** with no extra dev. **No `isPro = true` debug bypass in release path, no `simulatePurchase` stub in prod path.** Require `xcodebuild test` (real Auth sign-in, real RevenueCat sandbox purchase → Firestore `entitlements/pro=true` → paywall unlocks, real export/share) passing.
+- **Ready to use (non-negotiable):** **Working & tested E2E before handoff — prod-like, no dummy checks, real implementation from 0-day.** After generation, `put keys in .xcconfig → run on simulator/device →` announce and users can **sign in (Apple) → 3 free uses → paywall (RevenueCat) → subscribe (sandbox) → core loop → history/share/export** with no extra dev. **No `isPro = true` debug bypass in release path, no `simulatePurchase` stub in prod path.** Then run §15 SHIP TO GITHUB to create/push the repo and deploy to TestFlight. Require `xcodebuild test` (real Auth sign-in, real RevenueCat sandbox purchase → Firestore `entitlements/pro=true` → paywall unlocks, real export/share) passing.
 - **Pre-flight checklist (before `xcodebuild run`):**
   1. **Bundle match:** `BUNDLE_ID` in Xcode == App Store Connect == `GoogleService-Info.plist` `BUNDLE_ID` == RevenueCat app config; otherwise Auth/push/IAP all fail silently.
   2. **Sign in with Apple:** capability ON + App ID configured; Firebase Auth Apple provider enabled with Services ID + key.
@@ -572,7 +572,7 @@ Ship continuously.
 
 ## Hour 30–36
 
-Deploy.
+Deploy — run §15 SHIP TO GITHUB (seeds + .env setup + repo push).
 
 Test.
 
@@ -600,7 +600,7 @@ Send:
 * Payment instructions
 * Implementation timeline
 
-Generate the final Obsidian report with all findings, problems, and contacts, then **immediately run the Vault git sync** from §13 (commit + push to `seyhunak/obsidian-vault:main`).
+Generate the final Obsidian report with all findings, problems, and contacts, then **immediately run the Vault git sync** from §13 (commit + push to `seyhunak/obsidian-vault:main`), and verify the solution repo is pushed to GitHub per §15 (commit + push, create repo if needed).
 
 **Success = money committed or paid.**
 
@@ -839,6 +839,84 @@ If the URL is blocked/paywalled, use fallback: text extraction via cache / `tavi
 
 ---
 
+# 15. SHIP TO GITHUB (FINAL BUILD STEP)
+
+After the MVP is built and the customer has given a buying signal, the final step before demo is to **ship the solution to GitHub** so it is live, reproducible, and the customer can access it.
+
+This step runs **after §5 BUILD**. It applies to the solution code repo (not the Obsidian vault — that syncs per §13).
+
+## Step 1 — Seed + .env setup (run the setup script)
+
+### Track A — Web SaaS
+- The generator already created `scripts/seed-env.sh` (or `scripts/setup.ts`).
+- Run it: `bash scripts/seed-env.sh` (or `npx tsx scripts/setup.ts`).
+- It asks for: `NEXT_PUBLIC_CONVEX_URL`, `CONVEX_DEPLOYMENT`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, `CLERK_WEBHOOK_SECRET`, `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_CREDITS`, `NEXT_PUBLIC_SITE_URL`, `ADMIN_EMAIL`.
+- It writes `.env.local` and `.env.production`, runs `npx convex codegen` + `npx convex dev --once --typecheck disable`, and reports readiness.
+- On subsequent runs, it only validates existing `.env.local`.
+
+### Track B — Mobile-only iOS
+- The generator created `scripts/setup-ios.sh`.
+- Run it: `bash scripts/setup-ios.sh`.
+- It asks for: `REVENUECAT_IOS_API_KEY`, `FIREBASE_PROJECT_ID`, `APPLE_TEAM_ID`, `BUNDLE_ID`, product IDs (`PRO_MONTHLY`, `PRO_YEARLY`).
+- It writes `.xcconfig`, validates `GoogleService-Info.plist` bundle match, runs `xcodebuild -resolvePackageDependencies`.
+
+## Step 2 — Verify locally
+- **Track A:** `npm run dev` → confirm `dev:majestic-wren-98` (or assigned name), register/login (Clerk) → buy credits (100 credits $1k) → use the workbench → vault/PDF/CSV. Run pre-flight checklist from §5.
+- **Track B:** `xcodebuild run` (simulator) → sign in (Apple) → 3 free uses → paywall (RevenueCat sandbox) → core loop → history/share. Run pre-flight checklist from §5.
+
+## Step 3 — Create GitHub repo (if needed) + push
+
+```bash
+# From the solution project root
+git init 2>/dev/null
+
+# Create repo on GitHub if it doesn't exist
+gh repo create <REPO_NAME> \
+  --public \
+  --description "48h Money In: [DOMAIN] — [1-line value prop]" \
+  --source=. \
+  --remote=origin \
+  --push
+```
+
+If the repo already exists, skip `--push` and push manually:
+
+```bash
+git remote add origin https://github.com/<OWNER>/<REPO_NAME>.git 2>/dev/null
+git branch -M main
+git add -A
+
+# NEVER commit .env / keys — respect .gitignore
+git restore --staged .env .env.local .env.production .xcconfig 2>/dev/null
+git restore --staged "GoogleService-Info.plist" 2>/dev/null
+
+git commit -m "48h money in: [DOMAIN] [LOCATION] [PRICE] — MVP shipped"
+git push -u origin main
+```
+
+**Repo naming convention:**
+```
+48h-[domain-slug]-[location-slug]
+# e.g. /48h-receipt-clearing-berlin
+```
+
+## Step 4 — Add README + deployment docs
+- Generate `README.md` with: problem, buyer, solution, tech stack, setup instructions, seed script usage, and a link to the customer demo.
+- Add `DEPLOY.md` if one-click deployment (Vercel / TestFlight) is not yet documented.
+- Commit and push.
+
+## Step 5 — Deploy to production (Track A) / TestFlight (Track B)
+- **Track A:** Deploy Convex to prod (`npx convex deploy --yes`) + Vercel (`vercel --prod`), verify live URL works (Clerk login → Stripe checkout → webhook → Convex +100 → real workflow).
+- **Track B:** Archive via `xcodebuild archive` + upload via Transporter; push to TestFlight internal tests immediately, then external for up to 10k testers.
+
+## Rules
+- **Never commit API keys, `.env.local`, `.env.production`, `.xcconfig`, or `GoogleService-Info.plist`.** Add them to `.gitignore` if the generator missed them.
+- Verify `git status` is clean of secrets before each push.
+- If `gh repo create` fails (repo exists), fall back to manual `git remote add` + push.
+- Push at least once after seeds run and the app is E2E-verified — do not ship a broken repo.
+
+---
+
 # START COMMAND
 
 When invoked with:
@@ -857,4 +935,4 @@ immediately run §0 INTAKE first.
 
 Do not skip the four questions (domain, location, pricing, platform). Echo provided values, ask for missing ones, then start.
 
-Start by finding **real problems being experienced today**, not by brainstorming products. When started from a URL, first run §14 capture, then §0 INTAKE gap-fill, then §1 FIND THE MONEY.
+Start by finding **real problems being experienced today**, not by brainstorming products. When started from a URL, first run §14 capture, then §0 INTAKE gap-fill, then §1 FIND THE MONEY. After a buying signal is received and the MVP is built, always run §15 SHIP TO GITHUB to seed, set up .envs, create/push the repo, and deploy.
