@@ -36,13 +36,14 @@ Find a real, current, expensive problem that companies in a specific domain/loca
 **Kickoff (mandatory, first commands in a fresh project root — spec-driven, then Hallmark UI):**
 
 ```bash
-# spec-kit — spec → plan → tasks → implement (https://github.com/github/spec-kit)
-npx -y specify init --here --ai claude --script sh
+# spec-kit — Spec-Driven Development (https://github.com/github/spec-kit, needs Python 3.11+ and uv)
+uv tool install specify-cli
+specify init my-app --integration opencode   # keys: opencode | cline | kilocode
 # Hallmark — owns ALL UI (https://github.com/nutlope/hallmark)
 npx skills add nutlope/hallmark
 ```
 
-Never write app code before the spec exists and Hallmark is installed. Code only via opencode/kilo/cline TUIs with `model:approve`.
+Never write app code before the spec exists and Hallmark is installed. Code only via opencode/kilo/cline TUIs with `model:approve`. SDD skills run in agent chat: `/speckit-constitution` once, then `/speckit-specify → plan → tasks → implement → converge` (until Converged).
 
 `spec-kit` → Next.js 16 App Router + Tailwind + shadcn/ui + **Hallmark (owns ALL UI)** (`audit` → Hallmark picks best-fit theme → `build`) + full landing (single CTA) + **Clean Architecture** (`domain/application/infrastructure/presentation`) + **Clerk** (hosted auth, `ADMIN_EMAIL` admin, `/app` Clerk-protected) + **Convex** (real tables, `dev:<your-deployment>`, `npx convex dev --once`) + **SEO** (metadata/sitemap/robots/JSON-LD/OG/`llms.txt`) + **Stripe** (100 credits — $99, $0.99/credit, free 3 on signup, `Buy → Stripe → /app?credits=added`, keep `stripe listen`) + PDF/CSV + **Admin** (`/admin`) + lucide `ShieldCheck` logo + **seed script** (`scripts/seed-env.sh`)
 

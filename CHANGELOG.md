@@ -4,6 +4,8 @@ Follows the skill's own §16 guidance: log every change, no silent skips.
 
 ## Unreleased
 
+- spec-kit pinned to official flow (github/spec-kit): `uv tool install specify-cli` + `specify init --integration opencode|cline|kilocode`, `/speckit-constitution` once + `/speckit-specify → plan → tasks → implement → converge` until Converged; extensions mapped (`assess` → §2–§3 kill/clarify/go, `bug` → §16 Maintain)
+
 - Track A: mandatory spec-kit + Hallmark kickoff installs before any app code
 - Track A: Hallmark owns ALL UI with best-fit theme selection (no blind Tally default)
 - Track A: `/data` CRUD page (tenant-scoped) + `/connect` Composio page (per-user default, server-side only)
