@@ -51,6 +51,8 @@ Never write app code before the spec exists and Hallmark is installed. Code only
 - Real `/app` from 0-day: upload → validation → real [DOMAIN] workflow via API → vault (no simulation stub)
 - Top menu: `logo - App name - Buttons - Logged user + balance` (Admin hidden from public)
 - Footer generic: `About · Terms · Privacy · Contact` (200) + `sitemap.xml`/`robots.txt`
+- `/data` page: CRUD over Convex tables (tenant-scoped, admin sees all), realtime, server-side validation, audited deletes — no dummy rows
+- `/connect` page: asks for Composio API key (connected account defaults to the logged-in user — per-user, owner-only) + connect the toolkit(s) fitting the solution (max 2 for 48h), server-side calls only; solution-workflow scope, sprint outreach stays manual (§4/§11)
 - **Pre-flight checklist (6)**: Convex URL no trailing `/`, Convex push, `src/proxy.ts` for Next 16, Clerk `useUser` not `SignedIn`, Stripe `price_...` vs `price_data` + `success_url = req.origin`, Hero single CTA + generic footer
 
 ## Stack — Track B (Mobile, iOS + Android)
