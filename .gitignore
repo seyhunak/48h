@@ -1,1 +1,14 @@
 .DS_Store
+
+# Secrets — never commit (see SKILL.md §15 Rules)
+.env
+.env.local
+.env.production
+.env.*.local
+*.xcconfig
+GoogleService-Info.plist
+google-services.json
+android/key.properties
+*-service-account.json
+serviceAccountKey.json
+*.bak
