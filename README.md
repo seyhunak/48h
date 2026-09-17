@@ -7,7 +7,7 @@
 
 **48h Money In — 48-hour sprint to land a first paying customer** — `Problem → Buyer → Validation → Solution → Demo → Offer → Payment`.
 
-Portable skill for OpenCode / Codex / Claude Code. Use when you invoke `48h Money In: [DOMAIN] | [LOCATION] | [PRICE]` or `48h Money In: https://...` (URL capture mode). Repo: `https://github.com/seyhunak/48h` (formerly `48h-money-in` — old links redirect).
+Portable skill for OpenCode / Codex / Claude Code. Use when you invoke `48h: [DOMAIN] | [LOCATION] | [PRICE]` or `48h: https://...` (URL capture mode). Repo: `https://github.com/seyhunak/48h` (formerly `48h-money-in` — old links redirect).
 
 ## Mission
 
@@ -27,36 +27,36 @@ Find a real, current, expensive problem that companies in a specific domain/loca
 | Track | Platform | Stack |
 |-------|----------|-------|
 | **Track A** (default) | Web SaaS | Next.js 16 + Convex + Clerk + Stripe + Hallmark |
-| **Track B** | Mobile-only iOS | SwiftUI + Firebase + RevenueCat |
+| **Track B** | Mobile (iOS + Android) | Flutter + Firebase + RevenueCat |
 
 ## Stack — Track A (Web SaaS)
 
-`spec-kit` → Next.js 16 App Router + Tailwind + shadcn/ui + **Hallmark** (`npx skills add nutlope/hallmark` → `audit` → pick theme **Tally** (SaaS) / **Hum** (editorial) → `build`) + full landing (single CTA) + **Clean Architecture** (`domain/application/infrastructure/presentation`) + **Clerk** (hosted auth, `ADMIN_EMAIL` admin, `/app` Clerk-protected) + **Convex** (real tables, `dev:<your-deployment>`, `npx convex dev --once`) + **SEO** (metadata/sitemap/robots/JSON-LD/OG/`llms.txt`) + **Stripe** (100 credits — $1,000, $10/credit, free 3 on signup, `Buy → Stripe → /app?credits=added`, keep `stripe listen`) + PDF/CSV + **Admin** (`/admin`) + lucide `ShieldCheck` logo + **seed script** (`scripts/seed-env.sh`)
+`spec-kit` → Next.js 16 App Router + Tailwind + shadcn/ui + **Hallmark** (`npx skills add nutlope/hallmark` → `audit` → pick theme **Tally** (SaaS) / **Hum** (editorial) → `build`) + full landing (single CTA) + **Clean Architecture** (`domain/application/infrastructure/presentation`) + **Clerk** (hosted auth, `ADMIN_EMAIL` admin, `/app` Clerk-protected) + **Convex** (real tables, `dev:<your-deployment>`, `npx convex dev --once`) + **SEO** (metadata/sitemap/robots/JSON-LD/OG/`llms.txt`) + **Stripe** (100 credits — $99, $0.99/credit, free 3 on signup, `Buy → Stripe → /app?credits=added`, keep `stripe listen`) + PDF/CSV + **Admin** (`/admin`) + lucide `ShieldCheck` logo + **seed script** (`scripts/seed-env.sh`)
 
 - Real `/app` from 0-day: upload → validation → real [DOMAIN] workflow via API → vault (no simulation stub)
 - Top menu: `logo - App name - Buttons - Logged user + balance` (Admin hidden from public)
 - Footer generic: `About · Terms · Privacy · Contact` (200) + `sitemap.xml`/`robots.txt`
 - **Pre-flight checklist (6)**: Convex URL no trailing `/`, Convex push, `src/proxy.ts` for Next 16, Clerk `useUser` not `SignedIn`, Stripe `price_...` vs `price_data` + `success_url = req.origin`, Hero single CTA + generic footer
 
-## Stack — Track B (Mobile-only iOS)
+## Stack — Track B (Mobile, iOS + Android)
 
-SwiftUI (iOS 17+, 3-tab max, SF Symbols, Dynamic Type) + **Clean MVVM** (Domain/Data/Presentation/Services) + **Firebase** (Auth Apple-first, Firestore real collections, Storage, Functions 2nd gen, FCM, Crashlytics) + **RevenueCat** (`pro` entitlement, `pro_monthly` + `pro_yearly`, 3 free uses → paywall, sandbox StoreKit config, webhook → Firestore entitlements) + `scripts/setup-ios.sh` (asks REVENUECAT/FIREBASE/APPLE keys → `.xcconfig` → resolve deps → reports ready) — working & tested E2E prod-like, real core loop from 0-day, no simulation, distribute via TestFlight internal→external (no App Store review on critical path)
+Flutter (stable, 3-tab max) + **Clean Architecture** (`lib/domain`, `lib/data`, `lib/presentation`) + **Firebase** (Auth Apple + Google, Firestore real collections, Storage, Functions 2nd gen, FCM, Crashlytics, `flutterfire configure`) + **RevenueCat** (`pro` entitlement in both stores, `pro_monthly` + `pro_yearly`, 3 free uses → paywall, sandbox both platforms, webhook → Firestore entitlements) + `scripts/setup-mobile.sh` (asks REVENUECAT/FIREBASE/ID keys → `flutterfire configure` → `pub get` → reports ready) — working & tested E2E prod-like, real core loop from 0-day, no simulation, distribute via Firebase App Distribution → Play internal / TestFlight external (no store review on critical path)
 
 ## Usage
 
 ```bash
 # Standard invocation
-48h Money In: Fintech | Saudi | $1,000 (100 credits $10/credit free 3)
-48h Money In: Insurtech | Saudi | $1,000
-48h Money In: Logistics for SMEs | Berlin, DE | €500–€2k | Web
+48h: Fintech | Saudi | $99 (100 credits $0.99/credit free 3)
+48h: Insurtech | Saudi | $99
+48h: Logistics for SMEs | Berlin, DE | €500–€2k | Web
 
 # URL Opportunity Capture (alternative start)
-48h Money In: https://example.com/pricing
-48h Money In: https://regulator.gov/new-rule-2026
+48h: https://example.com/pricing
+48h: https://regulator.gov/new-rule-2026
 
-# Mobile-only shorthand
-48h Money In mobile-only: Fitness tracking | UAE | $7.99/mo
-48h Money In iOS: Health data export | US | $39/yr
+# Mobile shorthand (Track B — Flutter, iOS + Android)
+48h mobile: Fitness tracking | UAE | $7.99/mo
+48h mobile: Health data export | US | $39/yr
 ```
 
 ## 48-Hour Execution Clock
@@ -131,13 +131,13 @@ git push origin main
 
 After MVP built and buying signal received:
 
-1. **Seed + .env setup** — Run `scripts/seed-env.sh` (Track A) or `scripts/setup-ios.sh` (Track B)
-2. **Verify locally** — `npm run dev` / `xcodebuild run` with full E2E test
+1. **Seed + .env setup** — Run `scripts/seed-env.sh` (Track A) or `scripts/setup-mobile.sh` (Track B)
+2. **Verify locally** — `npm run dev` / `flutter run` with full E2E test
 3. **Create GitHub repo + push** — `gh repo create 48h-[domain]-[location] --public --source=. --push`
 4. **Add README + DEPLOY.md** — Problem, buyer, solution, tech stack, setup instructions
-5. **Deploy** — Vercel (Track A) or TestFlight (Track B)
+5. **Deploy** — $5 VPS via Docker (Track A) · device builds + App Distribution (Track B)
 
-**Never commit API keys, `.env.local`, `.xcconfig`, or `GoogleService-Info.plist`.**
+**Never commit API keys, `.env.local`, `google-services.json`, `GoogleService-Info.plist`, `android/key.properties`, or service-account keys.**
 
 ## License
 
