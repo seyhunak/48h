@@ -1,13 +1,13 @@
-# 48h Money In — Skill
+# 48h — Skill
 
-[![License](https://img.shields.io/github/license/seyhunak/48h-money-in.svg?style=flat)](./LICENSE)
-[![Issues](https://img.shields.io/github/issues/seyhunak/48h-money-in.svg?style=flat)](https://github.com/seyhunak/48h-money-in/issues)
-[![Forks](https://img.shields.io/github/forks/seyhunak/48h-money-in.svg?style=flat)](https://github.com/seyhunak/48h-money-in/forks)
-[![Stars](https://img.shields.io/github/stars/seyhunak/48h-money-in.svg?style=flat)](https://github.com/seyhunak/48h-money-in/stargazers)
+[![License](https://img.shields.io/github/license/seyhunak/48h.svg?style=flat)](./LICENSE)
+[![Issues](https://img.shields.io/github/issues/seyhunak/48h.svg?style=flat)](https://github.com/seyhunak/48h/issues)
+[![Forks](https://img.shields.io/github/forks/seyhunak/48h.svg?style=flat)](https://github.com/seyhunak/48h/forks)
+[![Stars](https://img.shields.io/github/stars/seyhunak/48h.svg?style=flat)](https://github.com/seyhunak/48h/stargazers)
 
-**48-hour sprint to land a first paying customer** — `Problem → Buyer → Validation → Solution → Demo → Offer → Payment`.
+**48h Money In — 48-hour sprint to land a first paying customer** — `Problem → Buyer → Validation → Solution → Demo → Offer → Payment`.
 
-Portable skill for OpenCode / Codex / Claude Code. Use when you invoke `48h Money In: [DOMAIN] | [LOCATION] | [PRICE]` or `48h Money In: https://...` (URL capture mode).
+Portable skill for OpenCode / Codex / Claude Code. Use when you invoke `48h Money In: [DOMAIN] | [LOCATION] | [PRICE]` or `48h Money In: https://...` (URL capture mode). Repo: `https://github.com/seyhunak/48h` (formerly `48h-money-in` — old links redirect).
 
 ## Mission
 
@@ -90,11 +90,11 @@ SwiftUI (iOS 17+, 3-tab max, SF Symbols, Dynamic Type) + **Clean MVVM** (Domain/
 
 ```bash
 # OpenCode
-cp -r 48h-money-in ~/.config/opencode/skills/
+cp -r 48h ~/.config/opencode/skills/
 # Codex
-cp -r 48h-money-in ~/.codex/skills/
+cp -r 48h ~/.codex/skills/
 # Claude Code
-cp -r 48h-money-in ~/.claude/skills/
+cp -r 48h ~/.claude/skills/
 ```
 
 ## Output Format
