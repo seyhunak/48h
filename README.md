@@ -2,10 +2,12 @@
 
 [![License](https://img.shields.io/github/license/seyhunak/48h.svg?style=flat)](./LICENSE)
 [![Issues](https://img.shields.io/github/issues/seyhunak/48h.svg?style=flat)](https://github.com/seyhunak/48h/issues)
+[![Pull Requests](https://img.shields.io/github/issues-pr/seyhunak/48h.svg?style=flat)](https://github.com/seyhunak/48h/pulls)
 [![Forks](https://img.shields.io/github/forks/seyhunak/48h.svg?style=flat)](https://github.com/seyhunak/48h/forks)
 [![Stars](https://img.shields.io/github/stars/seyhunak/48h.svg?style=flat)](https://github.com/seyhunak/48h/stargazers)
+[![Last Commit](https://img.shields.io/github/last-commit/seyhunak/48h.svg?style=flat)](https://github.com/seyhunak/48h/commits/main)
 
-**48h Money In — 48-hour sprint to land a first paying customer** — `Problem → Buyer → Validation → Solution → Demo → Offer → Payment`.
+**48h Money In — 48-hour sprint to land a first paying customer** — `Problem → Buyer → Validation → Solution → Demo → Offer → Payment → Autonomous Build → Approved Deploy → Operate`.
 
 Portable skill for OpenCode / Codex / Claude Code. Use when you invoke `48h: [DOMAIN] | [LOCATION] | [PRICE]` or `48h: https://...` (URL capture mode). Repo: `https://github.com/seyhunak/48h` (formerly `48h-money-in` — old links redirect).
 
@@ -31,7 +33,20 @@ Find a real, current, expensive problem that companies in a specific domain/loca
 
 ## Stack — Track A (Web SaaS)
 
-`spec-kit` → Next.js 16 App Router + Tailwind + shadcn/ui + **Hallmark** (`npx skills add nutlope/hallmark` → `audit` → pick theme **Tally** (SaaS) / **Hum** (editorial) → `build`) + full landing (single CTA) + **Clean Architecture** (`domain/application/infrastructure/presentation`) + **Clerk** (hosted auth, `ADMIN_EMAIL` admin, `/app` Clerk-protected) + **Convex** (real tables, `dev:<your-deployment>`, `npx convex dev --once`) + **SEO** (metadata/sitemap/robots/JSON-LD/OG/`llms.txt`) + **Stripe** (100 credits — $99, $0.99/credit, free 3 on signup, `Buy → Stripe → /app?credits=added`, keep `stripe listen`) + PDF/CSV + **Admin** (`/admin`) + lucide `ShieldCheck` logo + **seed script** (`scripts/seed-env.sh`)
+**Kickoff (mandatory, first commands in a fresh project root — spec-driven, then Hallmark UI):**
+
+```bash
+# spec-kit — spec → plan → tasks → implement (https://github.com/github/spec-kit)
+npx -y specify init --here --ai claude --script sh
+# Hallmark — owns ALL UI (https://github.com/nutlope/hallmark)
+npx skills add nutlope/hallmark
+```
+
+Never write app code before the spec exists and Hallmark is installed. Code only via opencode/kilo/cline TUIs with `model:approve`.
+
+`spec-kit` → Next.js 16 App Router + Tailwind + shadcn/ui + **Hallmark (owns ALL UI)** (`audit` → Hallmark picks best-fit theme → `build`) + full landing (single CTA) + **Clean Architecture** (`domain/application/infrastructure/presentation`) + **Clerk** (hosted auth, `ADMIN_EMAIL` admin, `/app` Clerk-protected) + **Convex** (real tables, `dev:<your-deployment>`, `npx convex dev --once`) + **SEO** (metadata/sitemap/robots/JSON-LD/OG/`llms.txt`) + **Stripe** (100 credits — $99, $0.99/credit, free 3 on signup, `Buy → Stripe → /app?credits=added`, keep `stripe listen`) + PDF/CSV + **Admin** (`/admin`) + lucide `ShieldCheck` logo + **seed script** (`scripts/seed-env.sh`)
+
+**Hallmark theme selection — Hallmark chooses one best-fit theme and applies it (do not default blindly to Tally):** `Hum` (Bubble sourdough app) · `Cobalt` (Distil extraction API) · `Carnival` (Cold Snap record label) · `Lumen` (Cinder AI tool) · `Custom` (Ferns & Fathom tea menu / Press Quaternary type studio) · `Garden` (Hollowback Apiary honey farm) · `Riso` (Off-Register print fair) · `Tally` (SaaS product page — default ONLY for generic B2B SaaS) · `Wayfare` (travel booking) · `NAJM` (fashion brand) · `Hyperlane` (dev infra) · full 21-theme catalog (Specimen, Atelier, Brutal, Newsprint, Studio, Manifesto, Terminal, Midnight, Almanac, Garden, Riso, Sport, Bloom, Coral, Cobalt, Aurora, Editorial, Carnival, Lumen, Hum, Grid — press T on [usehallmark.com](https://www.usehallmark.com) to preview). State `Macrostructure: <name>. Theme: <name>.` before code.
 
 - Real `/app` from 0-day: upload → validation → real [DOMAIN] workflow via API → vault (no simulation stub)
 - Top menu: `logo - App name - Buttons - Logged user + balance` (Admin hidden from public)
@@ -135,7 +150,9 @@ After MVP built and buying signal received:
 2. **Verify locally** — `npm run dev` / `flutter run` with full E2E test
 3. **Create GitHub repo + push** — `gh repo create 48h-[domain]-[location] --public --source=. --push`
 4. **Add README + DEPLOY.md** — Problem, buyer, solution, tech stack, setup instructions
-5. **Deploy** — $5 VPS via Docker (Track A) · device builds + App Distribution (Track B)
+5. **Deploy (requires `deploy:approve`)** — $5 VPS via Docker (Track A) · device builds + App Distribution (Track B). Present deploy plan + rollback, wait for explicit `deploy:approve`, then verify live.
+
+After ship: **Operate** (`48h operate: [repo|URL] [maintain|optimize|market|sell|crm|all]`) — maintenance, optimization, marketing, sales, CRM on new or existing 48h apps.
 
 **Never commit API keys, `.env.local`, `google-services.json`, `GoogleService-Info.plist`, `android/key.properties`, or service-account keys.**
 
