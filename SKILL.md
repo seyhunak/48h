@@ -1,6 +1,6 @@
 ---
-name: 48h
-description: 48-hour sprint to land a first paying customer (aka 48h Money In). Always starts by asking domain(area), location/region, pricing target, and platform (Web SaaS vs mobile). Supports Web (Next.js+Convex+Stripe) and mobile ideas (Flutter+Firebase+RevenueCat IAP, iOS+Android). Use when the user invokes "48h: [DOMAIN] | [LOCATION] | [PRICE RANGE]" or provides a URL to capture domain/target/pricing opportunities, or asks to find/validate/sell a solution to a real expensive problem and close a paying customer within 48 hours. Do not use for long product development or general brainstorming.
+<name: 48h
+description: 48-hour sprint to land a first paying customer (aka 48h Money In). Always starts by asking domain(area), location/region, pricing target, and platform (Web SaaS vs mobile). Supports Web (Next.js+Convex+Stripe) and mobile ideas (Flutter+Firebase+RevenueCat IAP, iOS+Android). Autonomously builds and deploys the app (production deploy requires human approval) and operates it like real business ops — maintenance, optimization, marketing, sales, CRM — for new or existing 48h apps. Use when the user invokes "48h: [DOMAIN] | [LOCATION] | [PRICE RANGE]" or provides a URL to capture domain/target/pricing opportunities, or asks to find/validate/sell a solution to a real expensive problem and close a paying customer within 48 hours, or asks to build/deploy/operate/maintain/market/sell an existing 48h app. Do not use for long product development or general brainstorming.
 ---
 
 # Skill: 48h Money In
@@ -32,9 +32,11 @@ You are looking for a problem that:
 
 Your objective is:
 
-> **Problem → Buyer → Validation → Solution → Demo → Offer → Payment**
+> **Problem → Buyer → Validation → Solution → Demo → Offer → Payment → Autonomous Build → Approved Deploy → Operate**
 
 The clock starts immediately.
+
+The agent **autonomously builds, tests, and prepares deployment** for new or existing 48h apps. **Production deployment always requires explicit human approval** — never deploy to prod, push to TestFlight external, or run destructive migrations without a `deploy:approve` confirmation. Business operations after ship (maintenance, optimization, marketing, sales, CRM) run autonomously as §16 OPERATE.
 ---
 
 # 0. INTAKE — ASK DOMAIN, LOCATION, PRICING FIRST (MANDATORY)
@@ -266,27 +268,31 @@ The goal is:
 
 ---
 
-# 5. BUILD ONLY AFTER BUYING SIGNAL
+# 5. AUTONOMOUS BUILD + APPROVED DEPLOY (AFTER BUYING SIGNAL)
 
-If the problem is validated, build the smallest possible solution.
+If the problem is validated, **autonomously build the smallest possible solution** — do not wait for step-by-step permission for code, tests, seeds, or local preview. Ask the human only for: missing API keys / secrets, and explicit production-deploy approval (§15).
 
-You may use:
+Autonomy rules:
+- **Build without asking:** scaffold, spec, code, seed scripts, `npm run build`, `npm run test:e2e` / `xcodebuild test`, local `npm run dev` / simulator run, Cloudflare Tunnel preview, README/DEPLOY docs.
+- **Stop and ask before:** `npx convex deploy --yes`, `vercel --prod`, TestFlight external upload, App Store submission, any prod DB migration / secret rotation / domain DNS change, any spend >$0 (paid services), any mailbox/social send (still manual per §4/§11).
+- **Deploy approval gate (mandatory wording):** present `Deploy plan: [targets + migration + rollback] — reply deploy:approve to ship` and wait. Log approval (who/when/what) in chat + Obsidian report. Preview links (localhost, Tunnel `*.trycloudflare.com`, TestFlight internal, Vercel preview) do NOT need approval; prod does.
+- **Existing 48h apps:** if the user points at a repo/folder/live URL, treat it as the app — audit first (`build`/`test`/pre-flight checklist), then extend/fix in place. Never re-scaffold over it; infer DOMAIN/LOCATION/PRICE from code + URL capture (§14) and confirm in one line.
 
-* Claude Code
-* OpenCode
-* Kilo Code
-* Cursor
-* GitHub
-* Supabase
-* Docker ($5 VPS)
-* Cloudflare
-* APIs
-* LLMs
-* Automation platforms
-* Existing SaaS
-* Open-source software
+<Builder stack (mandatory) — code only via these TUIs:
+* opencode TUI
+* kilo TUI
+* cline TUI
 
-Use AI aggressively.
+Infra/services (allowed alongside): GitHub, Supabase, Docker ($5 VPS), Vercel, Cloudflare, APIs, LLMs, automation platforms, existing SaaS, open-source software. No other coding agent (Claude Code, Cursor, etc.) unless the human explicitly approves it.
+
+Infra/services (allowed alongside): GitHub, Supabase, Vercel, Cloudflare, APIs, LLMs, automation platforms, existing SaaS, open-source software. No other coding agent (Claude Code, Cursor, etc.) unless the human explicitly approves it.
+
+Model approval gate (mandatory):
+- Use **human-approved models only** inside the TUIs. Before starting build (and before any model switch, paid model, or preview/experimental model), present `Model plan: [TUI + model + task scope] — reply model:approve to proceed` and wait.
+- Default to already-approved models; never auto-switch, auto-upgrade, or burn paid inference without `model:approve`.
+- Log TUI + model per task in chat + Obsidian report (e.g. `opencode / [model] — scaffold`, `cline / [model] — fix checkout`).
+
+Use AI aggressively within the approved TUI + model.
 
 The objective is not to demonstrate engineering ability.
 
@@ -302,12 +308,33 @@ over:
 
 Build only what is required to demonstrate the promised outcome.
 
-### Track A — Web SaaS (default) — Generate via spec-kit (GitHub)
+### Track A — Web SaaS (default) — Spec-Driven via spec-kit + Hallmark UI
 
-When you do build, **suggest generating the app with [github/spec-kit](https://github.com/github/spec-kit)** — spec-driven, white-label ready, 1-day capable. After building, run §15 SHIP TO GITHUB to seed, set up .envs, and push to a GitHub repo (created if needed).
+When you do build, **always kick off Track A with spec-driven development: install spec-kit + Hallmark first, then spec → Hallmark UI → code.** After building, run §15 SHIP TO GITHUB to seed, set up .envs, and push to a GitHub repo (created if needed).
 
-- **Spec first:** `/spec` writes the 48h fix-pack spec (problem → buyer → scope → success criteria) before code — matches §3 SELECT ONE.
-- **Frontend:** **Next.js 16 App Router + Tailwind + shadcn/ui + full landing page** — marketing landing (hero with **single primary CTA** `Upload 10 invoices — see cleared →` only, no secondary pricing hero button, problem → before/after, pricing 100 credits — $99 ($0.99/credit), social proof, FAQ) + app — fast to brand (logo/colors/subdomain, single `ShieldCheck` logo + App name, no extra icons), responsive, Docker-ready (`Dockerfile` + `docker-compose.yml`, deploys to a $5 VPS). **Use [Hallmark](https://www.usehallmark.com) ([github](https://github.com/nutlope/hallmark))** — install `npx skills add nutlope/hallmark` (auto-detected: Claude Code `~/.claude/skills/hallmark/`, Codex `~/.codex/skills/hallmark/`, Cursor `.cursor/rules/hallmark.mdc`; then just ask for UI — hallmark attaches via `hallmark.observe()`). 48h workflow: `hallmark audit` current page (ranked punch list, **no edits**) → pick theme (default **Tally** for SaaS fix-pack, **Hum** for editorial; 20 themes, press T to preview) → `hallmark build` with theme (macrostructure → theme → enrichment; stamped, slop-tested; refuses repeating last 3 macrostructures) → apply tokens to landing + `/app`. Extra verbs: `hallmark study <URL|screenshot>` → DNA card (`lock the DNA` → portable `design.md`, never copies pixels); `hallmark redesign` keeps content/brand, changes bones. Obey 8 foundations (display+body font pair, never Inter-everywhere; OKLCH 1 anchor hue, accent <5%; spacing multiples of 4; asymmetric biased layout; exponential ease-out + reduced-motion; distinct voice; display/body/label hierarchy) and avoid the 5 slop tells audit flags (purple-gradient hero → solid + single accent; Inter-as-display; centred-everything; icon-tile feature cards; generic AI nav). **Codebase must follow Clean Architecture** — `src/domain` (entities/use-cases, no framework), `src/application` (services, ports), `src/infrastructure` (Convex/Clerk/Stripe/PDF adapters), `src/presentation` (Next.js app routes + shadcn components) → dependency rule points inward, Hallmark tokens live only in presentation. **Use proper logo from icon library** — `lucide-react` `ShieldCheck` single + wordmark, token-colored. **Top menu (N5 pill → N1b for Hum) must show** `logo - App name - Buttons (App, Admin if admin) - Logged user + balance (if logged)` — Clerk `<UserButton>` / `useUser()` avatar + email + credits badge + **Buy Credits → Stripe Checkout** → redirect back to `/app` (success_url=`/app?credits=added`), keep `stripe listen` open; also show **Logout/Login**. **Admin link must NOT appear in public** — only visible to admin user. **Footer must be generic** — `About`, `Terms`, `Privacy`, `Contact`, `Sitemap`, `Robots` (all 200, not 404), no `White-label experiment — 1 customer · 1 day` text.
+<- **0. Kickoff installs (mandatory, first commands in fresh project root):**
+  ```bash
+  # spec-kit — spec-driven development (spec → plan → tasks → implement)
+  # see https://github.com/github/spec-kit
+  npx -y specify init --here --ai claude --script sh
+  # Hallmark — owns ALL UI (anti-AI-slop design skill, https://github.com/nutlope/hallmark)
+  npx skills add nutlope/hallmark
+  ```
+  Verify: `ls .specify/ spec/ 2>/dev/null; ls ~/.claude/skills/hallmark/ .cursor/rules/hallmark.mdc ~/.codex/skills/hallmark/ 2>/dev/null` — re-run installers if missing. Never write app code before the spec exists and Hallmark is installed. Code only via opencode/kilo/cline TUIs (§5 builder stack) with `model:approve`.
+- **Spec first (spec-kit):** `/spec` (spec-kit `specify`) writes the 48h fix-pack spec (problem → buyer → scope → success criteria) before code — matches §3 SELECT ONE. Then plan → tasks → implement through spec-kit. Spec is the source of truth; Hallmark builds UI from it.
+- **Frontend — Hallmark owns ALL UI:** **Next.js 16 App Router + Tailwind + shadcn/ui + full landing page** — marketing landing (hero with **single primary CTA** `Upload 10 invoices — see cleared →` only, no secondary pricing hero button, problem → before/after, pricing 100 credits — $99 ($0.99/credit), social proof, FAQ) + app — fast to brand (logo/colors/subdomain, single `ShieldCheck` logo + App name, no extra icons), responsive, Docker-ready (`Dockerfile` + `docker-compose.yml`, deploys to a $5 VPS). **Hallmark ([live](https://www.usehallmark.com) · [github](https://github.com/nutlope/hallmark)) is responsible for building ALL UI — never hand-roll hero/landing styling.** Install above auto-detects: Claude Code `~/.claude/skills/hallmark/`, Codex `~/.codex/skills/hallmark/`, Cursor `.cursor/rules/hallmark.mdc`; then just ask for UI — hallmark attaches via `hallmark.observe()`. 48h workflow: `hallmark audit` current page (ranked punch list, **no edits**) → Hallmark picks the theme that best matches the solution → `hallmark build` with that theme (macrostructure → theme → enrichment; stamped, slop-tested; refuses repeating last 3 macrostructures) → apply tokens to landing + `/app`. Extra verbs: `hallmark study <URL|screenshot>` → DNA card (`lock the DNA` → portable `design.md`, never copies pixels); `hallmark redesign` keeps content/brand, changes bones. **Theme selection — Hallmark chooses one best-fit theme from the catalog/showcase and applies it (do not default blindly to Tally):**
+  - `Hum` — Bubble guided sourdough app (editorial/playful consumer)
+  - `Cobalt` — Distil content-extraction API (modern-minimal dev/API)
+  - `Carnival` — Cold Snap record-label EP (bold music/culture)
+  - `Lumen` — Cinder AI reasoning tool (atmospheric AI)
+  - `Custom` — Ferns & Fathom tea menu / Press Quaternary type studio / Cascadia Nightjar / Mend Assembly (brief carries creative intent no catalog theme fits)
+  - `Garden` — Hollowback Apiary honey farm (organic/editorial)
+  - `Riso` — Off-Register risograph print fair (print/brutalist)
+  - `Tally` — SaaS product page, modern-minimal (default ONLY for generic B2B SaaS fix-pack)
+  - `Wayfare` — travel booking, atmospheric
+  - `NAJM` — Moroccan fashion brand
+  - `Hyperlane` — developer infrastructure
+  - Full 21-theme catalog also available: Specimen, Atelier, Brutal, Newsprint, Studio, Manifesto, Terminal, Midnight, Almanac, Garden, Riso, Sport, Bloom, Coral, Cobalt, Aurora, Editorial, Carnival, Lumen, Hum, Grid (press T on the Hallmark demo site to preview) — pick best-fit, state `Macrostructure: <name>. Theme: <name>. Differs from last on: <axes>.` before code. Obey 8 foundations (display+body font pair, never Inter-everywhere; OKLCH 1 anchor hue, accent <5%; spacing multiples of 4; asymmetric biased layout; exponential ease-out + reduced-motion; distinct voice; display/body/label hierarchy) and avoid the 5 slop tells audit flags (purple-gradient hero → solid + single accent; Inter-as-display; centred-everything; icon-tile feature cards; generic AI nav). **Codebase must follow Clean Architecture** — `src/domain` (entities/use-cases, no framework), `src/application` (services, ports), `src/infrastructure` (Convex/Clerk/Stripe/PDF adapters), `src/presentation` (Next.js app routes + shadcn components) → dependency rule points inward, Hallmark tokens live only in presentation. **Use proper logo from icon library** — `lucide-react` `ShieldCheck` single + wordmark, token-colored. **Top menu (N5 pill → N1b for Hum) must show** `logo - App name - Buttons (App, Admin if admin) - Logged user + balance (if logged)` — Clerk `<UserButton>` / `useUser()` avatar + email + credits badge + **Buy Credits → Stripe Checkout** → redirect back to `/app` (success_url=`/app?credits=added`), keep `stripe listen` open; also show **Logout/Login**. **Admin link must NOT appear in public** — only visible to admin user. **Footer must be generic** — `About`, `Terms`, `Privacy`, `Contact`, `Sitemap`, `Robots` (all 200, not 404), no `White-label experiment — 1 customer · 1 day` text.
 - **Auth:** **Clerk** — hosted auth (sign-in/up, orgs), webhook → Convex `users`, **admin user for me** (seeded via `ADMIN_EMAIL` env, role=admin). No custom auth.
 - **Backend:** **Convex** — real tables (no dummy data), schema in `convex/schema.ts` (tenants, users, invoices, submissions, credits, vault), file storage for XML/PDF, realtime queries. **Just put API keys in `.env.local` and it is ready — max 1 minute setup** (`NEXT_PUBLIC_CONVEX_URL`, `CLERK_*`, `STRIPE_*`). **Push live:** after seed, run `npx convex codegen` + `npx convex dev --once --typecheck disable` (dev at `dev:<your-deployment>`, prod via `npx convex deploy --yes`) — ensure DB, schema, indexes, and functions (`credits:getBalance/getOrCreate/consume/addCredits`) are built and deployed; verify with `npx convex run credits:getOrCreate '{"clerkId":"test123"}'`. No seed stubs.
 - **SEO (when creating app):** **Always include SEO** — Next.js Metadata API (title/description/canonical/OG/Twitter), `sitemap.ts`, `robots.ts`, `llms.txt`, JSON-LD (Organization + Product + FAQ), OG image (1200x630), `next-sitemap` or `next-seo`, and keyword-ready blog stub (`/blog`). Hallmark theme must not break SEO (semantic headings, alt text, meta).
@@ -325,7 +352,7 @@ When you do build, **suggest generating the app with [github/spec-kit](https://g
   5. **Stripe price:** `STRIPE_PRICE_CREDITS` may be `price_...` or `100` — `src/app/api/checkout/route.ts` must branch `isPriceId ? {price} : {price_data:{currency:"usd", product:"100 credits @ $0.99/credit", unit_amount:9900}}` ($99 for 100 → $0.99/credit); `success_url` must be `new URL(req.url).origin + "/app?credits=added"` (not `NEXT_PUBLIC_SITE_URL` prod on localhost). Webhook `src/app/api/webhooks/stripe/route.ts` must skip verification if `STRIPE_WEBHOOK_SECRET` is `...` placeholder, otherwise `whsec_...` from `stripe listen --forward-to localhost:3000/api/webhooks/stripe` must be kept open, and `/app?credits=added` must refetch Convex `getBalance` via realtime (no manual refresh).
   6. **Hero/Footer:** Hero has **single CTA** (`Upload 10 invoices — see cleared →` only, no secondary pricing button) and footer is **generic** (`About`, `Terms`, `Privacy`, `Contact`, `Sitemap`, `Robots` all 200) — no `White-label experiment — 1 customer · 1 day` text; create `src/app/about|terms|privacy|contact/page.tsx` + `sitemap.ts` includes them, otherwise 404.
 
-> Prompt hint: `spec-kit: Next.js 16 App Router + Tailwind + shadcn/ui + Hallmark (audit → Tally/Hum theme → build; foundations: font-pair, OKLCH 1-hue, asymmetric, no slop) + full landing + Clean Architecture (domain/application/infrastructure/presentation) + Clerk (admin user, /app Clerk-protected with login + credits check, top menu logo - App name - Buttons - Logged user + balance) + Convex (real tables, no dummy, 1m setup, prod-like, push live via convex dev --once + deploy) + SEO (metadata/sitemap/robots/JSON-LD/OG/llms.txt) + Stripe (100 credits — $99, $0.99/credit, free 3 on signup, top-menu Buy Credits → Stripe → /app?credits=added, keep stripe listen) + PDF/CSV + /admin + proper logo (lucide ShieldCheck) + seed script (asks for CONVEX/CLERK/STRIPE keys → writes .env.local + prod → codegen + dev --once + build → reports ready, 100 credits $99) — working & tested E2E prod-like, real implementation (100 credits $0.99/credit, /app real [DOMAIN] workflow from 0-day, no simulation), preview via Cloudflare Tunnel then Docker-ship to a $5 VPS.`
+<> Prompt hint: `spec-kit kickoff (npx specify init + npx skills add nutlope/hallmark first, then /spec → plan → tasks → implement) + Next.js 16 App Router + Tailwind + shadcn/ui + Hallmark owns ALL UI (audit → best-fit theme from Hum/Cobalt/Carnival/Lumen/Garden/Riso/Tally/Wayfare/NAJM/Hyperlane/Custom → build; foundations: font-pair, OKLCH 1-hue, asymmetric, no slop) + full landing + Clean Architecture (domain/application/infrastructure/presentation) + Clerk (admin user, /app Clerk-protected with login + credits check, top menu logo - App name - Buttons - Logged user + balance) + Convex (real tables, no dummy, 1m setup, prod-like, push live via convex dev --once + deploy) + SEO (metadata/sitemap/robots/JSON-LD/OG/llms.txt) + Stripe (100 credits — $99, $0.99/credit, free 3 on signup, top-menu Buy Credits → Stripe → /app?credits=added, keep stripe listen) + PDF/CSV + /admin + proper logo (lucide ShieldCheck) + seed script (asks for CONVEX/CLERK/STRIPE keys → writes .env.local + prod → codegen + dev --once + build → reports ready, 100 credits $99) — working & tested E2E prod-like, real implementation (100 credits $0.99/credit, /app real [DOMAIN] workflow from 0-day, no simulation), preview via Cloudflare Tunnel then Docker-ship to a $5 VPS.`
 
 This keeps §5 Track A narrow (one fix-pack schema, one customer tenant) while leaving monetization + audit trails production-ready.
 
@@ -852,11 +879,11 @@ If the URL is blocked/paywalled, use fallback: text extraction via cache / `tavi
 
 ---
 
-# 15. SHIP TO GITHUB (FINAL BUILD STEP)
+# 15. SHIP TO GITHUB + APPROVED DEPLOY (FINAL BUILD STEP)
 
-After the MVP is built and the customer has given a buying signal, the final step before demo is to **ship the solution to GitHub** so it is live, reproducible, and the customer can access it.
+After the MVP is built and the customer has given a buying signal, the final step before demo is to **autonomously ship the solution to GitHub** so it is live, reproducible, and the customer can access it. **Git push + preview is autonomous; production deploy waits for human approval.**
 
-This step runs **after §5 BUILD**. It applies to the solution code repo (not the Obsidian vault — that syncs per §13).
+This step runs **after §5 BUILD**. It applies to the solution code repo (not the Obsidian vault — that syncs per §13). It applies to **new scaffolds and existing 48h apps** (repo path, live URL, or TestFlight app — audit in place, then ship).
 
 ## Step 1 — Seed + .env setup (run the setup script)
 
@@ -919,15 +946,46 @@ git push -u origin main
 - Add `DEPLOY.md` documenting the $5 VPS Docker deploy (no platform lock-in).
 - Commit and push.
 
-## Step 5 — Deploy to a $5 VPS via Docker (both tracks)
+<## Step 5 — Deploy to a $5 VPS via Docker (both tracks) — REQUIRES deploy:approve
 - **Track A:** Next.js `output: 'standalone'` multi-stage `Dockerfile` + `docker-compose.yml` (app + Caddy reverse proxy with auto-TLS). Push the image to GHCR (`ghcr.io/<owner>/<repo>:<sha>`), provision a $5 VPS (Docker + firewall 22/80/443), then deploy over SSH (`docker compose pull && docker compose up -d`). Deploy Convex to prod (`npx convex deploy --yes`), verify the live URL end-to-end (Clerk login → Stripe checkout → webhook → Convex +100 → real workflow), and confirm rollback works (previous image tag still available).
 - **Track B:** `flutter build apk --release` / `flutter build appbundle` / `flutter build ipa` → Firebase App Distribution (day-0 testers) → Play internal track / TestFlight external. Any custom server components ship with the same Docker pattern above.
+- **Approval gate:** autonomous work stops before this step. Present deploy plan + rollback, wait for explicit `deploy:approve`. After approval, deploy, verify, log result + approver in chat + Obsidian report. Never deploy on implied approval ("looks good", "ship it-ish" still needs explicit `deploy:approve`).
 
 ## Rules
 - **Never commit API keys, `.env.local`, `.env.production`, `google-services.json`, `GoogleService-Info.plist`, `android/key.properties`, or service-account keys.** Add them to `.gitignore` if the generator missed them.
 - Verify `git status` is clean of secrets before each push.
 - If `gh repo create` fails (repo exists), fall back to manual `git remote add` + push.
 - Push at least once after seeds run and the app is E2E-verified — do not ship a broken repo.
+
+---
+
+# 16. OPERATE — MAINTENANCE, OPTIMIZATION, MARKETING, SALES, CRM (NEW OR EXISTING APPS)
+
+After ship (or on any existing 48h app the user points at), act as real business operations. Trigger with `48h operate: [REPO PATH | GITHUB URL | LIVE URL] [focus: maintain|optimize|market|sell|crm|all]`. Audit first, then run the requested lanes autonomously. All code lanes use the §5 builder stack (opencode/kilo/cline TUIs with `model:approve`). Production changes still need `deploy:approve`; content/outreach drafts never auto-send (§4/§11).
+
+## 16.1 Maintain
+- Triage: repro → failing test or log evidence → smallest fix → `build` + `test:e2e`/`xcodebuild test` green.
+- Uptime/hygiene: dependency bumps (one at a time), env/secret validation via seed scripts, Convex/Firestore rules + indexes verified, backups/exports smoke-tested (PDF/CSV, Storage).
+- Log every fix in Obsidian report + CHANGELOG; open follow-ups as todos, not silent skips.
+
+## 16.2 Optimize
+- Conversion: hero single-CTA check, pricing clarity (100 credits — $99), signup → pay → first-value funnel, empty-states, 320/375/414/768 pass.
+- Performance: `npm run build` size audit, image/OG budgets, Convex query indexes, Firestore read fan-out, cache where free (no paid infra without approval).
+- Measure before/after (time, DSO, ticket %, churn signal) and report as Before → After like §7.
+
+## 16.3 Market
+- Ship landing/blog/SEO deltas (metadata, sitemap, robots, llms.txt, JSON-LD, OG image), Hallmark audit → theme build per §5 Track A.
+- Draft launch assets as files + pastes: posts, screenshots plan, paywall/App Store copy (Track B), FAQ/objection handling. Never auto-post.
+
+## 16.4 Sell
+- Re-run §3–§4 on the live app: buyer, offer, 3-message manual outreach batches, demo script against prod preview.
+- Proposal/pricing/payment-instruction pack per §10 Hour 42–48. No Composio/mailbox/social automation — ready-to-paste only.
+
+## 16.5 CRM
+- Track every prospect/customer in the app's own store (Convex `customers/interactions` or Firestore `customers/events` — no dummy rows) + mirror to Obsidian report (status: contacted/responded/demo/closed/lost).
+- Owner-only access (`role=admin` / Firestore owner rules); never expose PII in logs, screenshots, or commits.
+
+Operate loop output (§12 format): Current Objective / Evidence / Best Opportunity / Buyer / Offer / Next Action / Clock (use `Ongoing` outside the 48h window). Sync vault per §13 after each lane.
 
 ---
 
@@ -945,8 +1003,16 @@ When invoked with:
 
 `48h mobile: ...` *(shorthand for Track B — Flutter + Firebase + RevenueCat, iOS + Android)*
 
-immediately run §0 INTAKE first.
+**or**
 
-Do not skip the four questions (domain, location, pricing, platform). Echo provided values, ask for missing ones, then start.
+`48h operate: [REPO PATH | GITHUB URL | LIVE URL] [maintain|optimize|market|sell|crm|all]` *(Operate mode — see §16; works on new or existing 48h apps)*
 
-Start by finding **real problems being experienced today**, not by brainstorming products. When started from a URL, first run §14 capture, then §0 INTAKE gap-fill, then §1 FIND THE MONEY. After a buying signal is received and the MVP is built, always run §15 SHIP TO GITHUB to seed, set up .envs, create/push the repo, and deploy.
+**or**
+
+`48h build|deploy|fix|market|sell [EXISTING APP]` *(lane shorthand — routes to §5/§15/§16 on the existing app in place)*
+
+immediately run §0 INTAKE first (new sprint) — except Operate mode, which skips intake and starts with an app audit (stack, env, tests, buyer/offer) then runs the requested §16 lanes.
+
+Do not skip the four questions (domain, location, pricing, platform) for new sprints. Echo provided values, ask for missing ones, then start.
+
+Start by finding **real problems being experienced today**, not by brainstorming products. When started from a URL, first run §14 capture, then §0 INTAKE gap-fill, then §1 FIND THE MONEY. After a buying signal is received and the MVP is built, autonomously build + test + push to GitHub per §15, then **stop for `deploy:approve` before any production deploy**. After ship, continue with §16 OPERATE (maintenance, optimization, marketing, sales, CRM) on request or on `48h operate`.
