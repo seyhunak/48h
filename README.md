@@ -43,7 +43,7 @@ specify init my-app --integration opencode   # keys: opencode | cline | kilocode
 npx skills add nutlope/hallmark
 ```
 
-Never write app code before the spec exists and Hallmark is installed. Code only via opencode/kilo/cline TUIs with `model:approve`. SDD skills run in agent chat: `/speckit-constitution` once, then `/speckit-specify → plan → tasks → implement → converge` (until Converged).
+Never write app code before the spec exists and Hallmark is installed. Code only via opencode/kilo/cline TUIs with `model:approve`. SDD skills run in agent chat: `/speckit-constitution` once, then `/speckit-specify → plan → tasks → implement → converge` (until Converged). Extensions: `assess` (idea go/clarify/kill for scoring) + `bug` (assess → fix → test for maintenance).
 
 `spec-kit` → Next.js 16 App Router + Tailwind + shadcn/ui + **Hallmark (owns ALL UI)** (`audit` → Hallmark picks best-fit theme → `build`) + full landing (single CTA) + **Clean Architecture** (`domain/application/infrastructure/presentation`) + **Clerk** (hosted auth, `ADMIN_EMAIL` admin, `/app` Clerk-protected) + **Convex** (real tables, `dev:<your-deployment>`, `npx convex dev --once`) + **SEO** (metadata/sitemap/robots/JSON-LD/OG/`llms.txt`) + **Stripe** (100 credits — $99, $0.99/credit, free 3 on signup, `Buy → Stripe → /app?credits=added`, keep `stripe listen`) + PDF/CSV + **Admin** (`/admin`) + lucide `ShieldCheck` logo + **seed script** (`scripts/seed-env.sh`)
 
@@ -76,6 +76,13 @@ Flutter (stable, 3-tab max) + **Clean Architecture** (`lib/domain`, `lib/data`, 
 # Mobile shorthand (Track B — Flutter, iOS + Android)
 48h mobile: Fitness tracking | UAE | $7.99/mo
 48h mobile: Health data export | US | $39/yr
+
+# Operate an existing 48h app (no intake — starts with an app audit)
+48h operate: ./my-app all
+48h operate: https://github.com/owner/repo maintain
+
+# Lane shorthand on an existing app
+48h fix ./my-app
 ```
 
 ## 48-Hour Execution Clock
@@ -86,8 +93,8 @@ Flutter (stable, 3-tab max) + **Clean Architecture** (`lib/domain`, `lib/data`, 
 | **Score & Select** | 2–3 | One problem chosen with scoring |
 | **Prospect Research** | 3–5 | 20–50 prospects with contacts & personalization |
 | **Offer & Outreach** | 5–8 | Offer, landing/demo page, outreach messages |
-| **Validate & Build** | 8–16 | Buying signals → build MVP |
-| **Develop MVP** | 16–30 | AI-assisted development |
+| **Validate & Build** | 8–16 | Buying signals → spec-kit SDD MVP |
+| **Develop MVP** | 16–30 | implement → converge until Converged |
 | **Deploy & Test** | 30–36 | Ship to GitHub (§15), verify E2E |
 | **Demo & Close** | 36–48 | Demo, objections, offer, payment |
 
@@ -102,7 +109,7 @@ Flutter (stable, 3-tab max) + **Clean Architecture** (`lib/domain`, `lib/data`, 
 7. **Human-in-the-loop when appropriate** — For regulated/high-risk workflows
 8. **Don't over-engineer** — First customer needs problem solved, not final architecture
 9. **One customer is enough** — Objective: get the first person to pay
-10. **Kill weak ideas quickly** — If nobody cares, return to market
+10. **Kill weak ideas quickly** — If nobody cares, return to market (assess extension: go/clarify/kill with evidence)
 11. **No automation for outreach** — Manual copy only, no Composio/Gmail/social APIs
 
 ## Install
@@ -151,7 +158,7 @@ git push origin main
 After MVP built and buying signal received:
 
 1. **Seed + .env setup** — Run `scripts/seed-env.sh` (Track A) or `scripts/setup-mobile.sh` (Track B)
-2. **Verify locally** — `npm run dev` / `flutter run` with full E2E test
+2. **Verify locally** — `npm run dev` / `flutter run` with unit + E2E tests green (`test:unit` + `test:e2e` / `flutter analyze` + `flutter test`)
 3. **Create GitHub repo + push** — `gh repo create 48h-[domain]-[location] --public --source=. --push`
 4. **Add README + DEPLOY.md** — Problem, buyer, solution, tech stack, setup instructions
 5. **Deploy (requires `deploy:approve`)** — $5 VPS via Docker (Track A) · device builds + App Distribution (Track B). Present deploy plan + rollback, wait for explicit `deploy:approve`, then verify live.
