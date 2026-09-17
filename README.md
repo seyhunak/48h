@@ -26,12 +26,12 @@ Find a real, current, expensive problem that companies in a specific domain/loca
 
 | Track | Platform | Stack |
 |-------|----------|-------|
-| **Track A** (default) | Web SaaS | Next.js 15 + Convex + Clerk + Stripe + Hallmark |
+| **Track A** (default) | Web SaaS | Next.js 16 + Convex + Clerk + Stripe + Hallmark |
 | **Track B** | Mobile-only iOS | SwiftUI + Firebase + RevenueCat |
 
 ## Stack — Track A (Web SaaS)
 
-`spec-kit` → Next.js 15 App Router + Tailwind + shadcn/ui + **Hallmark** (`npx skills add nutlope/hallmark` → `audit` → pick theme **Tally** (SaaS) / **Hum** (editorial) → `build`) + full landing (single CTA) + **Clean Architecture** (`domain/application/infrastructure/presentation`) + **Clerk** (hosted auth, `ADMIN_EMAIL` admin, `/app` Clerk-protected) + **Convex** (real tables, `dev:majestic-wren-98`, `npx convex dev --once`) + **SEO** (metadata/sitemap/robots/JSON-LD/OG/`llms.txt`) + **Stripe** (100 credits — $1,000, $10/credit, free 3 on signup, `Buy → Stripe → /app?credits=added`, keep `stripe listen`) + PDF/CSV + **Admin** (`/admin`) + lucide `ShieldCheck` logo + **seed script** (`scripts/seed-env.sh`)
+`spec-kit` → Next.js 16 App Router + Tailwind + shadcn/ui + **Hallmark** (`npx skills add nutlope/hallmark` → `audit` → pick theme **Tally** (SaaS) / **Hum** (editorial) → `build`) + full landing (single CTA) + **Clean Architecture** (`domain/application/infrastructure/presentation`) + **Clerk** (hosted auth, `ADMIN_EMAIL` admin, `/app` Clerk-protected) + **Convex** (real tables, `dev:<your-deployment>`, `npx convex dev --once`) + **SEO** (metadata/sitemap/robots/JSON-LD/OG/`llms.txt`) + **Stripe** (100 credits — $1,000, $10/credit, free 3 on signup, `Buy → Stripe → /app?credits=added`, keep `stripe listen`) + PDF/CSV + **Admin** (`/admin`) + lucide `ShieldCheck` logo + **seed script** (`scripts/seed-env.sh`)
 
 - Real `/app` from 0-day: upload → validation → real [DOMAIN] workflow via API → vault (no simulation stub)
 - Top menu: `logo - App name - Buttons - Logged user + balance` (Admin hidden from public)
@@ -118,12 +118,10 @@ At sprint end (and incrementally), generates comprehensive report to `$OBSIDIAN_
 - Solution & Demo (before/after metrics)
 - Commercial Outcome (offer, price, close status)
 
-**Vault git sync required after report generation:**
+**Vault git sync required after report generation** (one-time setup: `export OBSIDIAN_VAULT="/path/to/your/vault"` + your own git identity):
 ```bash
-export OBSIDIAN_VAULT="/Users/seyhunakyurek/Documents/Obsidian/Seyhun Akyurek"
+: "${OBSIDIAN_VAULT:?OBSIDIAN_VAULT is not set}"
 cd "$OBSIDIAN_VAULT"
-git config user.name "Seyhun Akyurek"
-git config user.email "seyhunakyurek@gmail.com"
 git add -A
 git commit -m "48h money in: [DOMAIN] [LOCATION] [PRICE] — [outcome]"
 git push origin main
