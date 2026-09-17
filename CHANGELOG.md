@@ -4,6 +4,8 @@ Follows the skill's own §16 guidance: log every change, no silent skips.
 
 ## Unreleased
 
+- Track A + Track B generate unit tests and GitHub Actions CI/CD: Track A gets colocated Vitest unit tests (`test:unit`) + `ci.yml` (push/PR) + `deploy.yml` (`workflow_dispatch` to `production` env = `deploy:approve` gate); Track B gets `flutter test` + `flutter analyze` + `ci.yml` + App Distribution lane on dispatch
+
 - spec-kit pinned to official flow (github/spec-kit): `uv tool install specify-cli` + `specify init --integration opencode|cline|kilocode`, `/speckit-constitution` once + `/speckit-specify → plan → tasks → implement → converge` until Converged; extensions mapped (`assess` → §2–§3 kill/clarify/go, `bug` → §16 Maintain)
 
 - Track A: mandatory spec-kit + Hallmark kickoff installs before any app code

@@ -54,11 +54,12 @@ Never write app code before the spec exists and Hallmark is installed. Code only
 - Footer generic: `About · Terms · Privacy · Contact` (200) + `sitemap.xml`/`robots.txt`
 - `/data` page: CRUD over Convex tables (tenant-scoped, admin sees all), realtime, server-side validation, audited deletes — no dummy rows
 - `/connect` page: asks for Composio API key (connected account defaults to the logged-in user — per-user, owner-only) + connect the toolkit(s) fitting the solution (max 2 for 48h), server-side calls only; solution-workflow scope, sprint outreach stays manual (§4/§11)
+- Tests + CI/CD (GitHub Actions): unit tests colocated (`*.test.ts(x)`, Vitest, `test:unit`) + `ci.yml` (push/PR: lint + typecheck + unit + build) + `deploy.yml` (`workflow_dispatch` to `production` env with required reviewers = `deploy:approve` gate)
 - **Pre-flight checklist (6)**: Convex URL no trailing `/`, Convex push, `src/proxy.ts` for Next 16, Clerk `useUser` not `SignedIn`, Stripe `price_...` vs `price_data` + `success_url = req.origin`, Hero single CTA + generic footer
 
 ## Stack — Track B (Mobile, iOS + Android)
 
-Flutter (stable, 3-tab max) + **Clean Architecture** (`lib/domain`, `lib/data`, `lib/presentation`) + **Firebase** (Auth Apple + Google, Firestore real collections, Storage, Functions 2nd gen, FCM, Crashlytics, `flutterfire configure`) + **RevenueCat** (`pro` entitlement in both stores, `pro_monthly` + `pro_yearly`, 3 free uses → paywall, sandbox both platforms, webhook → Firestore entitlements) + `scripts/setup-mobile.sh` (asks REVENUECAT/FIREBASE/ID keys → `flutterfire configure` → `pub get` → reports ready) — working & tested E2E prod-like, real core loop from 0-day, no simulation, distribute via Firebase App Distribution → Play internal / TestFlight external (no store review on critical path)
+Flutter (stable, 3-tab max) + **Clean Architecture** (`lib/domain`, `lib/data`, `lib/presentation`) + **Firebase** (Auth Apple + Google, Firestore real collections, Storage, Functions 2nd gen, FCM, Crashlytics, `flutterfire configure`) + **RevenueCat** (`pro` entitlement in both stores, `pro_monthly` + `pro_yearly`, 3 free uses → paywall, sandbox both platforms, webhook → Firestore entitlements) + `scripts/setup-mobile.sh` (asks REVENUECAT/FIREBASE/ID keys → `flutterfire configure` → `pub get` → reports ready) — working & tested E2E prod-like, real core loop from 0-day, no simulation, distribute via Firebase App Distribution → Play internal / TestFlight external (no store review on critical path) + `flutter test` + `flutter analyze` + GitHub Actions CI (`ci.yml` on push/PR, App Distribution lane on dispatch)
 
 ## Usage
 
