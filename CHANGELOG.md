@@ -4,6 +4,8 @@ Follows the skill's own §16 guidance: log every change, no silent skips.
 
 ## Unreleased
 
+- Added §5.0 skill router: all 25 agent-skills + hallmark explicitly mapped to 48h situations (was: only ~10 named skills); §16 lanes now name their skills (Maintain/Optimize/Market/CRM)
+
 - **Build discipline migrated from spec-kit to addyosmani/agent-skills (spec-kit retired):** kickoff is now `npx skills add addyosmani/agent-skills --all -y` (25 skills, 70+ agents — no `specify-cli`, no `.specify/`, no `/speckit-*`); lifecycle is `spec-driven-development` → `planning-and-task-breakdown` → `incremental-implementation` + `test-driven-development` → `debugging-and-error-recovery` → `code-review-and-quality` → `shipping-and-launch` (routed via `using-agent-skills`); idea kill discipline is `idea-refine` + `interview-me` (go/clarify/kill with evidence, replaces `assess` extension); bug lane is `debugging-and-error-recovery` Prove-It pattern (replaces `bug` extension + `.specify/bugs/` reports)
 - Fixed broken SKILL.md frontmatter (`<name:` → `name:` — was failing YAML parse in `skills list`)
 

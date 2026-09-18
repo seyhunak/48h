@@ -286,6 +286,47 @@ The goal is:
 
 If the problem is validated, **autonomously build the smallest possible solution** — do not wait for step-by-step permission for code, tests, seeds, or local preview. Ask the human only for: missing API keys / secrets, and explicit production-deploy approval (§15).
 
+## 5.0 SKILL ROUTER — ALL 25 agent-skills + hallmark (MANDATORY)
+
+The build discipline is [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)
+(spec-kit is retired — no `specify-cli`, no `.specify/`, no `/speckit-*`).
+**All 25 skills are in scope, not just the SDD core.** Before ANY technical
+work — even a 1% match — read the matching `SKILL.md` first and follow its
+workflow steps in order; never skip verification steps. Route via
+`using-agent-skills` when unsure.
+
+| Situation | Skill to read FIRST | 48h adaptation |
+|---|---|---|
+| Don't know what user wants yet | `interview-me` | One question at a time until ~95% confident; ask domain/location/price/platform (§0) |
+| Rough idea needs sharpening / kill-or-go | `idea-refine` + `interview-me` | §2–§3 scoring: diverge, stress-test, end in go / clarify / kill with evidence |
+| New feature / vague ask, no spec | `spec-driven-development` | Feed §3 SELECT ONE (problem → buyer → scope → success criteria); save `SPEC.md`, get approval before code |
+| No quality bar written down | `constraint-driven-development` | Record bar in `CONSTRAINTS.md` (tests required, no suppressed checks, no stubs); watch diff for weakened bar |
+| Have spec, need tasks / estimate | `planning-and-task-breakdown` | Thin vertical slices; `tasks/plan.md` + `tasks/todo.md`; approval before build |
+| Starting session / switching tasks / output degrading | `context-engineering` | Fresh session per phase (spec → plan → build → review); carry `SPEC.md` + plan + verification state, not chat history |
+| Need doc-verified code (Next/Convex/Clerk/Stripe/Flutter/Firebase) | `source-driven-development` | Verify against official docs, not memory; cite sources in code comments for API-edge cases |
+| Implementing code | `incremental-implementation` | One slice at a time; red → green → commit per task; never `git add -A` blindly |
+| API / contract / module boundary | `api-and-interface-design` | Design Convex function + API route contracts first; keep `domain/` pure (Hyrum's Law: every exposed field is a promise) |
+| UI / page / component | `frontend-ui-engineering` | Production-quality, accessible, responsive; tokens only, no invented metrics |
+| Greenfield / audit / redesign styling | `hallmark` (project skill, same pack) | Owns ALL UI: `audit` (no edits) → pick best-fit theme → `build`; never hand-roll hero/landing styling |
+| Writing / running tests | `test-driven-development` | Failing test first (red → green → refactor); unit > integration > e2e; bugs use Prove-It pattern (repro test first) |
+| Browser-only bug / visual verification | `browser-testing-with-devtools` | Real Chrome runtime: DOM, console errors, network, vitals on landing + `/app` flows |
+| Something broke / failing test | `debugging-and-error-recovery` | Repro → localize → fix → guard; §16 Maintain lane runs on this |
+| High-stakes / unfamiliar code / irreversible op | `doubt-driven-development` | Verify before trusting: prod auth, payments, migrations, deploys, secret handling — cheaper to check now than debug later |
+| Reviewing code / PR | `code-review-and-quality` | Five axes (correctness, readability, architecture, security, performance); Critical/Important/Suggestion with file:line |
+| Code works but is hard to read/extend | `code-simplification` | Clarity over cleverness; Chesterton's Fence — understand why before removing |
+| Auth / input / secrets / PII / OAuth | `security-and-hardening` | OWASP Top Ten; server-side validation; Composio keys server-side only; never commit secrets |
+| Slow / N+1 / Core Web Vitals | `performance-optimization` | Measure before optimizing; profile → fix → re-measure with delta |
+| Adding logs / metrics / alerts | `observability-and-instrumentation` | Every shipped feature gets evidence it works; structured logs; audit failures in vault/Changelog |
+| Committing / branching / PR / release | `git-workflow-and-versioning` | Atomic commits, trunk-based, clean PRs; `scripts/seed-env.sh` never commits `.env.local` |
+| CI / deploy pipeline | `ci-cd-and-automation` | `ci.yml` on push/PR + dispatch-gated `deploy.yml` (= `deploy:approve`); quality gates automated |
+| Writing docs / ADRs | `documentation-and-adrs` | Document the *why* (offer, pricing, approval gate) in README/CHANGELOG/Obsidian report |
+| Deprecating / migrating | `deprecation-and-migration` | Code is a liability: migrate writers first, keep backward-compat reads, remove only with evidence |
+| Deploying / launching | `shipping-and-launch` | Pre-launch checklist + GO/NO-GO + mandatory rollback plan; §15 runs on this |
+| Unsure which skill | `using-agent-skills` | Meta-router: read it, then the matched skill — never paste it into always-on prompts alongside native routing |
+
+Anti-rationalization (wrong every time): "too small for a skill", "I'll just
+implement it", "context first". **Skill first, then act.**
+
 Autonomy rules:
 - **Build without asking:** scaffold, spec, code, seed scripts, `npm run build`, `npm run test:unit` + `npm run test:e2e` (Track A) / `flutter analyze` + `flutter test` (Track B), local `npm run dev` / `flutter run` on device, Cloudflare Tunnel preview, README/DEPLOY docs.
 - **Stop and ask before:** `npx convex deploy --yes`, Docker image push + VPS deploy (`docker compose pull && docker compose up -d`), Play internal / TestFlight external upload, store submission, any prod DB migration / secret rotation / domain DNS change, any spend >$0 (paid services), any mailbox/social send (still manual per §4/§11).
@@ -982,17 +1023,17 @@ git push -u origin main
 After ship (or on any existing 48h app the user points at), act as real business operations. Trigger with `48h operate: [REPO PATH | GITHUB URL | LIVE URL] [focus: maintain|optimize|market|sell|crm|all]`. Audit first, then run the requested lanes autonomously. All code lanes use the §5 builder stack (opencode/kilo/cline TUIs with `model:approve`). Production changes still need `deploy:approve`; content/outreach drafts never auto-send (§4/§11).
 
 ## 16.1 Maintain
-- Triage: repro → failing test or log evidence → smallest fix → `build` + `test:unit` + `test:e2e` (Track A) / `flutter analyze` + `flutter test` (Track B) green.
+- Triage via `debugging-and-error-recovery` (Prove-It: repro → failing test or log evidence → smallest fix → green) → `test-driven-development` guards → `code-review-and-quality` pass: `build` + `test:unit` + `test:e2e` (Track A) / `flutter analyze` + `flutter test` (Track B) green.
 - Uptime/hygiene: dependency bumps (one at a time), env/secret validation via seed scripts, Convex/Firestore rules + indexes verified, backups/exports smoke-tested (PDF/CSV, Storage).
 - Log every fix in Obsidian report + CHANGELOG; open follow-ups as todos, not silent skips.
 
 ## 16.2 Optimize
-- Conversion: hero single-CTA check, pricing clarity (100 credits — $99), signup → pay → first-value funnel, empty-states, 320/375/414/768 pass.
-- Performance: `npm run build` size audit, image/OG budgets, Convex query indexes, Firestore read fan-out, cache where free (no paid infra without approval).
+- Conversion: hero single-CTA check, pricing clarity (100 credits — $99), signup → pay → first-value funnel, empty-states, 320/375/414/768 pass (`frontend-ui-engineering` + `hallmark audit`).
+- Performance: `performance-optimization` (measure first) + `browser-testing-with-devtools` for real vitals — `npm run build` size audit, image/OG budgets, Convex query indexes, Firestore read fan-out, cache where free (no paid infra without approval).
 - Measure before/after (time, DSO, ticket %, churn signal) and report as Before → After like §7.
 
 ## 16.3 Market
-- Ship landing/blog/SEO deltas (metadata, sitemap, robots, llms.txt, JSON-LD, OG image), Hallmark audit → theme build per §5 Track A.
+- Ship landing/blog/SEO deltas (metadata, sitemap, robots, llms.txt, JSON-LD, OG image), Hallmark audit → theme build per §5 Track A; record decisions via `documentation-and-adrs`.
 - Draft launch assets as files + pastes: posts, screenshots plan, paywall/App Store copy (Track B), FAQ/objection handling. Never auto-post.
 
 ## 16.4 Sell
@@ -1000,7 +1041,7 @@ After ship (or on any existing 48h app the user points at), act as real business
 - Proposal/pricing/payment-instruction pack per §10 Hour 42–48. No Composio/mailbox/social automation — ready-to-paste only.
 
 ## 16.5 CRM
-- Track every prospect/customer in the app's own store (Convex `customers/interactions` or Firestore `customers/events` — no dummy rows) + mirror to Obsidian report (status: contacted/responded/demo/closed/lost).
+- Track every prospect/customer in the app's own store (Convex `customers/interactions` or Firestore `customers/events` — no dummy rows) + mirror to Obsidian report (status: contacted/responded/demo/closed/lost). Instrument with `observability-and-instrumentation` (structured events, no PII in logs).
 - Owner-only access (`role=admin` / Firestore owner rules); never expose PII in logs, screenshots, or commits.
 
 Operate loop output (§12 format): Current Objective / Evidence / Best Opportunity / Buyer / Offer / Next Action / Clock (use `Ongoing` outside the 48h window). Sync vault per §13 after each lane.
