@@ -36,16 +36,16 @@ Find a real, current, expensive problem that companies in a specific domain/loca
 **Kickoff (mandatory, first commands in a fresh project root — spec-driven, then Hallmark UI):**
 
 ```bash
-# spec-kit — Spec-Driven Development (https://github.com/github/spec-kit, needs Python 3.11+ and uv)
-uv tool install specify-cli
-specify init my-app --integration opencode   # keys: opencode | cline | kilocode
+# agent-skills — production-grade engineering skills (https://github.com/addyosmani/agent-skills, replaces spec-kit)
+# Installs all 25 skills; works in 70+ agents (opencode | cline | kilocode | cursor | copilot | claude-code …)
+npx skills add addyosmani/agent-skills --all -y
 # Hallmark — owns ALL UI (https://github.com/nutlope/hallmark)
 npx skills add nutlope/hallmark
 ```
 
-Never write app code before the spec exists and Hallmark is installed. Code only via opencode/kilo/cline TUIs with `model:approve`. SDD skills run in agent chat: `/speckit-constitution` once, then `/speckit-specify → plan → tasks → implement → converge` (until Converged). Extensions: `assess` (idea go/clarify/kill for scoring) + `bug` (assess → fix → test for maintenance).
+Never write app code before the spec exists and Hallmark is installed. Code only via opencode/kilo/cline TUIs with `model:approve`. SDD runs one phase at a time: `spec-driven-development` (SPEC.md + approval) → `planning-and-task-breakdown` (tasks/plan.md + tasks/todo.md + approval) → `incremental-implementation` + `test-driven-development` → `debugging-and-error-recovery` → `code-review-and-quality` → `shipping-and-launch`. Idea kill discipline: `idea-refine` + `interview-me` (go/clarify/kill with evidence) for scoring; bug lane: `debugging-and-error-recovery` Prove-It pattern for maintenance.
 
-`spec-kit` → Next.js 16 App Router + Tailwind + shadcn/ui + **Hallmark (owns ALL UI)** (`audit` → Hallmark picks best-fit theme → `build`) + full landing (single CTA) + **Clean Architecture** (`domain/application/infrastructure/presentation`) + **Clerk** (hosted auth, `ADMIN_EMAIL` admin, `/app` Clerk-protected) + **Convex** (real tables, `dev:<your-deployment>`, `npx convex dev --once`) + **SEO** (metadata/sitemap/robots/JSON-LD/OG/`llms.txt`) + **Stripe** (100 credits — $99, $0.99/credit, free 3 on signup, `Buy → Stripe → /app?credits=added`, keep `stripe listen`) + PDF/CSV + **Admin** (`/admin`) + lucide `ShieldCheck` logo + **seed script** (`scripts/seed-env.sh`)
+`agent-skills` → Next.js 16 App Router + Tailwind + shadcn/ui + **Hallmark (owns ALL UI)** (`audit` → Hallmark picks best-fit theme → `build`) + full landing (single CTA) + **Clean Architecture** (`domain/application/infrastructure/presentation`) + **Clerk** (hosted auth, `ADMIN_EMAIL` admin, `/app` Clerk-protected) + **Convex** (real tables, `dev:<your-deployment>`, `npx convex dev --once`) + **SEO** (metadata/sitemap/robots/JSON-LD/OG/`llms.txt`) + **Stripe** (100 credits — $99, $0.99/credit, free 3 on signup, `Buy → Stripe → /app?credits=added`, keep `stripe listen`) + PDF/CSV + **Admin** (`/admin`) + lucide `ShieldCheck` logo + **seed script** (`scripts/seed-env.sh`)
 
 **Hallmark theme selection — Hallmark chooses one best-fit theme and applies it (do not default blindly to Tally):** `Hum` (Bubble sourdough app) · `Cobalt` (Distil extraction API) · `Carnival` (Cold Snap record label) · `Lumen` (Cinder AI tool) · `Custom` (Ferns & Fathom tea menu / Press Quaternary type studio) · `Garden` (Hollowback Apiary honey farm) · `Riso` (Off-Register print fair) · `Tally` (SaaS product page — default ONLY for generic B2B SaaS) · `Wayfare` (travel booking) · `NAJM` (fashion brand) · `Hyperlane` (dev infra) · full 21-theme catalog (Specimen, Atelier, Brutal, Newsprint, Studio, Manifesto, Terminal, Midnight, Almanac, Garden, Riso, Sport, Bloom, Coral, Cobalt, Aurora, Editorial, Carnival, Lumen, Hum, Grid — press T on [usehallmark.com](https://www.usehallmark.com) to preview). State `Macrostructure: <name>. Theme: <name>.` before code.
 
@@ -93,8 +93,8 @@ Flutter (stable, 3-tab max) + **Clean Architecture** (`lib/domain`, `lib/data`, 
 | **Score & Select** | 2–3 | One problem chosen with scoring |
 | **Prospect Research** | 3–5 | 20–50 prospects with contacts & personalization |
 | **Offer & Outreach** | 5–8 | Offer, landing/demo page, outreach messages |
-| **Validate & Build** | 8–16 | Buying signals → spec-kit SDD MVP |
-| **Develop MVP** | 16–30 | implement → converge until Converged |
+| **Validate & Build** | 8–16 | Buying signals → agent-skills SDD MVP |
+| **Develop MVP** | 16–30 | incremental slices, each red → green → commit |
 | **Deploy & Test** | 30–36 | Ship to GitHub (§15), verify E2E |
 | **Demo & Close** | 36–48 | Demo, objections, offer, payment |
 
@@ -109,7 +109,7 @@ Flutter (stable, 3-tab max) + **Clean Architecture** (`lib/domain`, `lib/data`, 
 7. **Human-in-the-loop when appropriate** — For regulated/high-risk workflows
 8. **Don't over-engineer** — First customer needs problem solved, not final architecture
 9. **One customer is enough** — Objective: get the first person to pay
-10. **Kill weak ideas quickly** — If nobody cares, return to market (assess extension: go/clarify/kill with evidence)
+10. **Kill weak ideas quickly** — If nobody cares, return to market (idea-refine + interview-me: go/clarify/kill with evidence)
 11. **No automation for outreach** — Manual copy only, no Composio/Gmail/social APIs
 
 ## Install
