@@ -114,14 +114,25 @@ Flutter (stable, 3-tab max) + **Clean Architecture** (`lib/domain`, `lib/data`, 
 
 ## Install
 
+The 48h skill rides on top of the [agent-skills](https://github.com/addyosmani/agent-skills)
+pack (spec-kit is retired — no `specify-cli`, no `.specify/`, no `/speckit-*`).
+Install both packs, then the 48h skill itself, into every agent you use:
+
 ```bash
-# OpenCode
-cp -r 48h ~/.config/opencode/skills/
-# Codex
-cp -r 48h ~/.codex/skills/
-# Claude Code
-cp -r 48h ~/.claude/skills/
+# 1. Engineering skills (25 skills — SDD lifecycle, TDD, review, ship…)
+npx skills add addyosmani/agent-skills --all -y
+# 2. Hallmark (owns ALL UI)
+npx skills add nutlope/hallmark
+# 3. 48h sprint skill (this repo)
+git clone https://github.com/seyhunak/48h.git /tmp/48h
+cp -r /tmp/48h ~/.claude/skills/48h          # Claude Code
+cp -r /tmp/48h ~/.config/opencode/skills/48h # OpenCode
+cp -r /tmp/48h ~/.codex/skills/48h           # Codex
 ```
+
+Verify: `npx skills list` shows the packs; `ls ~/.claude/skills/48h/SKILL.md`
+confirms the sprint skill. Never write app code before `SPEC.md` exists and
+Hallmark is installed.
 
 ## Output Format
 
