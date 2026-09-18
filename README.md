@@ -109,8 +109,33 @@ Flutter (stable, 3-tab max) + **Clean Architecture** (`lib/domain`, `lib/data`, 
 7. **Human-in-the-loop when appropriate** — For regulated/high-risk workflows
 8. **Don't over-engineer** — First customer needs problem solved, not final architecture
 9. **One customer is enough** — Objective: get the first person to pay
-10. **Kill weak ideas quickly** — If nobody cares, return to market (idea-refine + interview-me: go/clarify/kill with evidence)
+10. **Kill weak ideas quickly** — If nobody cares, return to market (`idea-refine` + `interview-me`: go/clarify/kill with evidence)
 11. **No automation for outreach** — Manual copy only, no Composio/Gmail/social APIs
+
+## Skill Router — all 25 agent-skills + hallmark (mandatory)
+
+The build discipline is [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)
+— **all 25 skills are in scope, not just the SDD core** (see `SKILL.md` §5.0
+for the full situation → skill table with 48h adaptations). Before ANY
+technical work — even a 1% match — read the matching `SKILL.md` first and
+follow its workflow steps in order; never skip verification steps. Route via
+`using-agent-skills` when unsure.
+
+Core lifecycle: `spec-driven-development` (SPEC.md + approval) →
+`planning-and-task-breakdown` (plan + todo + approval) →
+`incremental-implementation` + `test-driven-development` (red → green →
+commit per slice) → `debugging-and-error-recovery` →
+`code-review-and-quality` (+ `security-and-hardening` /
+`performance-optimization`) → `shipping-and-launch` (GO/NO-GO + rollback).
+Supporting skills always in play: `interview-me` (§0 intake), `idea-refine`
+(§2–§3 kill-or-go), `constraint-driven-development` (quality bar),
+`context-engineering` (fresh session per phase), `source-driven-development`
+(doc-verified APIs), `api-and-interface-design` (contracts first),
+`frontend-ui-engineering` + `hallmark` (all UI), `browser-testing-with-devtools`
+(real runtime verification), `doubt-driven-development` (high-stakes checks),
+`code-simplification`, `observability-and-instrumentation`,
+`git-workflow-and-versioning`, `ci-cd-and-automation`,
+`documentation-and-adrs`, `deprecation-and-migration`.
 
 ## Install
 
